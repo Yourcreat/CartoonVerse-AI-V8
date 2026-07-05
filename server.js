@@ -35,23 +35,3 @@ require("./commands/video")(bot, ai, sendLongMessage, database);
 require("./commands/movie")(bot, ai, sendLongMessage, database);
 require("./commands/title")(bot, ai, sendLongMessage);
 require("./commands/thumbnail")(bot, ai, sendLongMessage);
-
-// Start Command
-// Help Command
-// Health Check
-app.get("/health", (req, res) => {
-  res.json({
-    status: "online",
-    bot: "CartoonVerse AI V8",
-    version: "8.0.0"
-  });
-});
-
-// Start Server
-app.listen(PORT, () => {
-
-  console.log("🚀 CartoonVerse AI V8 Started");
-  console.log(`🌐 Running on Port ${PORT}`);
-
-});
-

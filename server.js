@@ -37,7 +37,6 @@ require("./commands/title")(bot, ai, sendLongMessage);
 require("./commands/thumbnail")(bot, ai, sendLongMessage);
 
 // Start Command
-bot.onText(/\/start/, async (msg) => {
 
   await bot.sendMessage(
     msg.chat.id,
@@ -51,7 +50,6 @@ Type /help to see all commands.`
 
 });
 // Help Command
-bot.onText(/\/help/, async (msg) => {
 
   await bot.sendMessage(
     msg.chat.id,

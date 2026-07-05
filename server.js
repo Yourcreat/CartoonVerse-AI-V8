@@ -25,6 +25,9 @@ const sendLongMessage = require("./utils/sendLongMessage");
 const database = require("./utils/database");
 
 // Commands
+require("./commands/start")(bot);
+require("./commands/help")(bot);
+
 require("./commands/story")(bot, ai, sendLongMessage, database);
 require("./commands/project")(bot, ai, sendLongMessage, database);
 require("./commands/image")(bot, ai, sendLongMessage, database);

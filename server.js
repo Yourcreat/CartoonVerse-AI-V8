@@ -37,45 +37,7 @@ require("./commands/title")(bot, ai, sendLongMessage);
 require("./commands/thumbnail")(bot, ai, sendLongMessage);
 
 // Start Command
-
-  await bot.sendMessage(
-    msg.chat.id,
-
-`🎬 CartoonVerse AI V8
-
-Welcome!
-
-Type /help to see all commands.`
-  );
-
-});
 // Help Command
-
-  await bot.sendMessage(
-    msg.chat.id,
-
-`📖 CartoonVerse AI V8
-
-Available Commands
-
-/project Topic
-/story Topic
-/movie Topic
-/image Topic
-/video Topic
-/title Topic
-/thumbnail Topic
-
-Example:
-
-/story Football Hero
-/image Football Hero
-/video Football Hero`
-
-  );
-
-});
-
 // Health Check
 app.get("/health", (req, res) => {
   res.json({

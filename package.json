@@ -1,0 +1,27 @@
+{
+  "name": "cartoonverse-ai-v8",
+  "version": "8.0.0",
+  "description": "Professional Telegram AI Bot for YouTube Cartoon Content Creation using Gemini AI",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "telegram",
+    "gemini",
+    "ai",
+    "cartoon",
+    "youtube",
+    "pixar"
+  ],
+  "author": "Your Create",
+  "license": "MIT",
+  "dependencies": {
+    "@google/genai": "^1.18.0",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "node-telegram-bot-api": "^0.66.0"
+  }
+}

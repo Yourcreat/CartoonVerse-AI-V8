@@ -11,26 +11,44 @@ function getProjectFile(chatId) {
   return path.join(DATA_DIR, `${chatId}.json`);
 }
 
-function saveProject(chatId, data) {
+function saveProject(chatId, project) {
+
+  let projects = [];
+
+  if (fs.existsSync(getProjectFile(chatId))) {
+    projects = JSON.parse(
+      fs.readFileSync(getProjectFile(chatId), "utf8")
+    );
+  }
+
+  if (!Array.isArray(projects)) {
+    projects = [];
+  }
+
+  projects.push(project);
+
   fs.writeFileSync(
     getProjectFile(chatId),
-    JSON.stringify(data, null, 2)
+    JSON.stringify(projects, null, 2)
   );
 }
 
-function loadProject(chatId) {
+function getProjects(chatId) {
+
   const file = getProjectFile(chatId);
 
   if (!fs.existsSync(file)) {
-    return null;
+    return [];
   }
 
-  return JSON.parse(
+  const data = JSON.parse(
     fs.readFileSync(file, "utf8")
   );
+
+  return Array.isArray(data) ? data : [];
 }
 
 module.exports = {
   saveProject,
-  loadProject
+  getProjects
 };

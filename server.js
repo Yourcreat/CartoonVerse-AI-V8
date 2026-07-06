@@ -85,6 +85,7 @@ require("./commands/thumbnail")(
   ai,
   sendLongMessage
 );
+require("./commands/save")(bot, database);
 
 // =========================
 // Express Routes

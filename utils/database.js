@@ -47,7 +47,14 @@ function getProjects(chatId) {
 
   return Array.isArray(data) ? data : [];
 }
+function overwriteProjects(chatId, projects) {
 
+  fs.writeFileSync(
+    getProjectFile(chatId),
+    JSON.stringify(projects, null, 2)
+  );
+
+}
 module.exports = {
   saveProject,
   getProjects

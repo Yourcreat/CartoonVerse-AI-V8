@@ -57,5 +57,6 @@ function overwriteProjects(chatId, projects) {
 }
 module.exports = {
   saveProject,
-  getProjects
+  getProjects,
+  overwriteProjects
 };

@@ -90,6 +90,7 @@ require("./commands/projects")(bot, database);
 require("./commands/delete")(bot, database);
 require("./commands/character")(bot, ai, sendLongMessage, database);
 require("./commands/scene")(bot, ai, sendLongMessage, database);
+require("./commands/storyboard")(bot, ai, sendLongMessage, database);
 
 // =========================
 // Express Routes

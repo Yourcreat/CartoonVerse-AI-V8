@@ -88,6 +88,7 @@ require("./commands/thumbnail")(
 require("./commands/save")(bot, database);
 require("./commands/projects")(bot, database);
 require("./commands/delete")(bot, database);
+require("./commands/character")(bot, ai, sendLongMessage, database);
 
 // =========================
 // Express Routes

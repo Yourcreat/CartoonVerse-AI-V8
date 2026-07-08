@@ -87,6 +87,7 @@ require("./commands/thumbnail")(
 );
 require("./commands/save")(bot, database);
 require("./commands/projects")(bot, database);
+require("./commands/delete")(bot, database);
 
 // =========================
 // Express Routes

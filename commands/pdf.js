@@ -121,7 +121,8 @@ module.exports = function (bot, database) {
   }, 60 * 60 * 1000);
 
 });
-          } catch (err) {
+         
+    } catch (err) {
 
       console.error(err);
 

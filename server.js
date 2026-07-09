@@ -31,6 +31,7 @@ const ai = new GoogleGenAI({
 
 const sendLongMessage = require("./utils/sendLongMessage");
 const database = require("./utils/database");
+require("./utils/initFolders")();
 
 // =========================
 // Commands

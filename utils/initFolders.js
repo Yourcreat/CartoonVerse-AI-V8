@@ -4,10 +4,10 @@ const path = require("path");
 module.exports = function () {
 
   const folders = [
-    "assets/temp/pdf",
-    "assets/temp/zip",
-    "assets/temp/images",
-    "assets/temp/videos"
+    "temp/pdf",
+    "temp/zip",
+    "temp/images",
+    "temp/videos"
   ];
 
   folders.forEach(folder => {

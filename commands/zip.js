@@ -20,9 +20,10 @@ module.exports = function (bot, database) {
       }
 
       const zipPath = path.join(
-        __dirname,
-        `../CartoonVerse_${chatId}.zip`
-      );
+  __dirname,
+  "../temp/zip",
+  `CartoonVerse_${chatId}.zip`
+);
 
       const output = fs.createWriteStream(zipPath);
 
@@ -51,8 +52,17 @@ module.exports = function (bot, database) {
           }
         );
 
-        fs.unlinkSync(zipPath);
+        setTimeout(() => {
 
+  if (fs.existsSync(zipPath)) {
+
+    fs.unlinkSync(zipPath);
+
+    console.log("🗑 ZIP Deleted:", zipPath);
+
+  }
+
+}, 60 * 60 * 1000);
       });
 
     } catch (err) {

@@ -102,29 +102,25 @@ module.exports = function (bot, database) {
 
       stream.on("finish", async () => {
 
-        await bot.sendDocument(
-          chatId,
-          filePath,
-          {
-            caption: "📄 CartoonVerse Project PDF"
-          }
-        );
+  await bot.sendDocument(
+    chatId,
+    filePath,
+    {
+      caption: "📄 CartoonVerse Project PDF"
+    }
+  );
 
-        fs.unlinkSync(filePath);
+  // Delete after 1 hour
+  setTimeout(() => {
 
-      });
+    if (fs.existsSync(filePath)) {
 
-    } catch (err) {
+      fs.unlinkSync(filePath);
 
-      console.error(err);
-
-      await bot.sendMessage(
-        chatId,
-        "❌ PDF export failed."
-      );
+      console.log("🗑 PDF Deleted:", filePath);
 
     }
 
-  });
+  }, 60 * 60 * 1000);
 
-};
+});

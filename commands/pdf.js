@@ -114,11 +114,8 @@ module.exports = function (bot, database) {
   setTimeout(() => {
 
     if (fs.existsSync(filePath)) {
-
-      fs.unlinkSync(filePath);
-
-      console.log("🗑 PDF Deleted:", filePath);
-
+    fs.unlinkSync(filePath);
+    console.log("🗑 PDF Deleted:", filePath);
     }
 
   }, 60 * 60 * 1000);

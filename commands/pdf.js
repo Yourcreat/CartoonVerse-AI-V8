@@ -124,3 +124,17 @@ module.exports = function (bot, database) {
   }, 60 * 60 * 1000);
 
 });
+          } catch (err) {
+
+      console.error(err);
+
+      await bot.sendMessage(
+        chatId,
+        "❌ PDF export failed."
+      );
+
+    }
+
+  });
+
+};

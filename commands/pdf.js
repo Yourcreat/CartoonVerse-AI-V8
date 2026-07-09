@@ -1,3 +1,7 @@
+const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
+
 module.exports = function (bot, database) {
 
   bot.onText(/\/pdf$/, async (msg) => {
@@ -9,33 +13,105 @@ module.exports = function (bot, database) {
       const projects = database.getProjects(chatId);
 
       if (!projects || projects.length === 0) {
+
         return bot.sendMessage(
           chatId,
           "❌ No saved project found."
         );
+
       }
 
-      let text = "📄 CartoonVerse AI Export\n\n";
+      const filePath = path.join(
+        __dirname,
+        `../CartoonVerse_${chatId}.pdf`
+      );
+
+      const doc = new PDFDocument({
+        margin: 40,
+        size: "A4"
+      });
+
+      const stream = fs.createWriteStream(filePath);
+
+      doc.pipe(stream);
+
+      // Cover Page
+
+      doc
+        .fontSize(24)
+        .text("🎬 CartoonVerse AI", {
+          align: "center"
+        });
+
+      doc.moveDown();
+
+      doc
+        .fontSize(18)
+        .text("Project Export", {
+          align: "center"
+        });
+
+      doc.moveDown();
+
+      doc
+        .fontSize(12)
+        .text(
+          `Generated: ${new Date().toLocaleString()}`
+        );
+
+      doc.addPage();
+            // Projects
 
       projects.forEach((project, index) => {
 
-        text += `====================\n`;
-        text += `Project ${index + 1}\n`;
-        text += `Type: ${project.type}\n`;
-        text += `Topic: ${project.topic}\n\n`;
-        text += `${project.content}\n\n`;
+        doc
+          .fontSize(18)
+          .text(`Project ${index + 1}`);
+
+        doc.moveDown(0.5);
+
+        doc
+          .fontSize(12)
+          .text(`Type : ${project.type || "Unknown"}`);
+
+        doc.text(`Topic : ${project.topic || "Untitled"}`);
+
+        doc.text(
+          `Created : ${
+            project.createdAt || "Unknown"
+          }`
+        );
+
+        doc.moveDown();
+
+        doc
+          .fontSize(11)
+          .text(project.content || "");
+
+        doc.moveDown();
+
+        doc.text(
+          "--------------------------------------------"
+        );
+
+        doc.moveDown();
 
       });
+            doc.end();
 
-      await bot.sendDocument(
-        chatId,
-        Buffer.from(text, "utf8"),
-        {},
-        {
-          filename: "CartoonVerse_Project.txt",
-          contentType: "text/plain"
-        }
-      );
+      stream.on("finish", async () => {
+
+        await bot.sendDocument(
+          chatId,
+          filePath,
+          {
+            caption: "📄 CartoonVerse Project PDF"
+          }
+        );
+
+        fs.unlinkSync(filePath);
+
+      });
 
     } catch (err) {
 
@@ -43,7 +119,7 @@ module.exports = function (bot, database) {
 
       await bot.sendMessage(
         chatId,
-        "❌ Export failed."
+        "❌ PDF export failed."
       );
 
     }

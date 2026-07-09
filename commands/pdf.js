@@ -21,10 +21,11 @@ module.exports = function (bot, database) {
 
       }
 
-      const filePath = path.join(
-        __dirname,
-        `../CartoonVerse_${chatId}.pdf`
-      );
+       const filePath = path.join(
+  __dirname,
+  "../temp/pdf",
+  `CartoonVerse_${chatId}.pdf`
+);
 
       const doc = new PDFDocument({
         margin: 40,

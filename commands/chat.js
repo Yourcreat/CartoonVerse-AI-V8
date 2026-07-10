@@ -59,11 +59,48 @@ English.
   break;
 
       case "character":
-        bot.sendMessage(
-          chatId,
-          "🎭 I understood you want a Character.\nPlease use:\n/character " + msg.text
-        );
-        break;
+
+  await bot.sendMessage(
+    chatId,
+    "🎭 Creating Character..."
+  );
+
+  const characterPrompt = `
+Create a professional Pixar-style character.
+
+Topic:
+${msg.text}
+
+Generate:
+
+Name
+
+Age
+
+Appearance
+
+Costume
+
+Personality
+
+Strength
+
+Weakness
+
+Backstory
+
+Suitable for animated YouTube videos.
+`;
+
+  const characterText = await gemini.generate(characterPrompt);
+
+  await sendLongMessage(
+    bot,
+    chatId,
+    characterText
+  );
+
+  break;
 
       case "scene":
         bot.sendMessage(

@@ -1,5 +1,5 @@
 const router = require("../services/router");
-
+const gemini = require("../services/gemini");
 module.exports = function (
   bot,
   ai,
@@ -21,11 +21,42 @@ module.exports = function (
     switch (intent) {
 
       case "story":
-        bot.sendMessage(
-          chatId,
-          "📖 I understood you want a Story.\nPlease use:\n/story " + msg.text
-        );
-        break;
+
+  await bot.sendMessage(
+    chatId,
+    "📖 Creating Story..."
+  );
+
+  const prompt = `
+Write a professional cinematic story.
+
+Topic:
+${msg.text}
+
+Requirements:
+
+- Powerful Title
+- Hook
+- Story
+- Ending
+- Moral
+
+Length:
+800-1000 words.
+
+Language:
+English.
+`;
+
+  const text = await gemini.generate(prompt);
+
+  await sendLongMessage(
+    bot,
+    chatId,
+    text
+  );
+
+  break;
 
       case "character":
         bot.sendMessage(

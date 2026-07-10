@@ -1,3 +1,4 @@
+const gemini = require("../services/gemini");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/scene (.+)/, async (msg, match) => {
@@ -36,12 +37,7 @@ Generate:
 Make it suitable for Pixar-style animated YouTube videos.
 `;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-      });
-
-      const text = response.text;
+      const text = await gemini.generate(prompt);
 
       database.saveProject(chatId, {
         type: "scene",

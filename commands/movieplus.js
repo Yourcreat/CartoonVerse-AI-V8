@@ -1,3 +1,4 @@
+const gemini = require("../services/gemini");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/movieplus (.+)/, async (msg, match) => {
@@ -68,12 +69,7 @@ Description
 20 SEO Tags
 `;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-      });
-
-      const text = response.text;
+      const text = await gemini.generate(prompt);
 
       database.saveProject(chatId, {
         type: "movieplus",

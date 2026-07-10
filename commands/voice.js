@@ -1,3 +1,4 @@
+const gemini = require("../services/gemini");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/voice (.+)/, async (msg, match) => {
@@ -45,12 +46,7 @@ The script must be suitable for ElevenLabs, Google TTS and Azure AI Voice.
 Return clean markdown.
 `;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-      });
-
-      const text = response.text;
+      const text = await gemini.generate(prompt);
 
       database.saveProject(chatId, {
         type: "voice",

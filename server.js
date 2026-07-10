@@ -92,6 +92,12 @@ require("./commands/delete")(bot, database);
 require("./commands/character")(bot, ai, sendLongMessage, database);
 require("./commands/scene")(bot, ai, sendLongMessage, database);
 require("./commands/storyboard")(bot, ai, sendLongMessage, database);
+require("./commands/episode")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/pdf")(bot, database);
 require("./commands/zip")(bot, database);
 // =========================

@@ -39,6 +39,12 @@ require("./utils/initFolders")();
 
 require("./commands/start")(bot);
 require("./commands/help")(bot);
+require("./commands/chat")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 
 require("./commands/story")(
   bot,

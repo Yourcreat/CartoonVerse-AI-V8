@@ -1,3 +1,4 @@
+const gemini = require("../services/gemini");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/episode (.+)/, async (msg, match) => {
@@ -49,12 +50,7 @@ Then generate:
 Output in clean markdown.
 `;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-      });
-
-      const text = response.text;
+      const text = await gemini.generate(prompt);
 
       database.saveProject(chatId, {
         type: "episode",

@@ -98,6 +98,12 @@ require("./commands/episode")(
   sendLongMessage,
   database
 );
+require("./commands/voice")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/pdf")(bot, database);
 require("./commands/zip")(bot, database);
 // =========================

@@ -1,3 +1,4 @@
+const gemini = require("../services/gemini");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/story (.+)/, async (msg, match) => {
@@ -9,11 +10,7 @@ module.exports = function (bot, ai, sendLongMessage, database) {
 
     try {
 
-      const response = await ai.models.generateContent({
-
-        model: "gemini-2.5-flash",
-
-        contents: `
+      const prompt = `
 Write a professional cinematic story.
 
 Topic:
@@ -31,16 +28,15 @@ Length:
 
 Language:
 English.
-`
+`;
 
-      });
+const text = await gemini.generate(prompt);
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        response.text
-      );
-
+await sendLongMessage(
+  bot,
+  chatId,
+  text
+);
     } catch (err) {
 
       console.error(err);

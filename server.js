@@ -110,6 +110,12 @@ require("./commands/movieplus")(
   sendLongMessage,
   database
 );
+require("./commands/create")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/pdf")(bot, database);
 require("./commands/zip")(bot, database);
 // =========================

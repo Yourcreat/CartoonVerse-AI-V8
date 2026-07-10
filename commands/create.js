@@ -1,3 +1,4 @@
+const gemini = require("../services/gemini");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/create (.+)/, async (msg, match) => {
@@ -85,12 +86,7 @@ Description
 Return clean markdown.
 `;
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-      });
-
-      const text = response.text;
+      const text = await gemini.generate(prompt);
 
       database.saveProject(chatId, {
         type: "create",

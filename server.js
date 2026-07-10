@@ -104,6 +104,12 @@ require("./commands/voice")(
   sendLongMessage,
   database
 );
+require("./commands/movieplus")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/pdf")(bot, database);
 require("./commands/zip")(bot, database);
 // =========================

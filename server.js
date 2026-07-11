@@ -122,6 +122,12 @@ require("./commands/create")(
   sendLongMessage,
   database
 );
+require("./commands/ai")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/pdf")(bot, database);
 require("./commands/zip")(bot, database);
 // =========================

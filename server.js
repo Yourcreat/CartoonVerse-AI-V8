@@ -134,6 +134,12 @@ require("./commands/imageprompts")(
   sendLongMessage,
   database
 );
+require("./commands/videoprompts")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/pdf")(bot, database);
 require("./commands/zip")(bot, database);
 // =========================

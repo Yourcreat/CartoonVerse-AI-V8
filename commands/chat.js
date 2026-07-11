@@ -103,11 +103,50 @@ Suitable for animated YouTube videos.
   break;
 
       case "scene":
-        bot.sendMessage(
-          chatId,
-          "🎬 I understood you want a Scene.\nPlease use:\n/scene " + msg.text
-        );
-        break;
+
+  await bot.sendMessage(
+    chatId,
+    "🎬 Creating Scene..."
+  );
+
+  const scenePrompt = `
+Create a cinematic Pixar-style storyboard scene.
+
+Topic:
+${msg.text}
+
+Generate:
+
+🎬 Scene Title
+
+📖 Scene Description
+
+🎥 Camera Angle
+
+🎭 Character Action
+
+😀 Character Emotion
+
+🌄 Background
+
+💡 Lighting
+
+🖼 Image Prompt
+
+🎞 Video Prompt
+
+Suitable for YouTube animated videos.
+`;
+
+  const sceneText = await gemini.generate(scenePrompt);
+
+  await sendLongMessage(
+    bot,
+    chatId,
+    sceneText
+  );
+
+  break;
 
       case "voice":
         bot.sendMessage(

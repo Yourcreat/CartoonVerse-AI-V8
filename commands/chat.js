@@ -1,6 +1,7 @@
 const router = require("../services/router");
 const gemini = require("../services/gemini");
 const memory = require("../utils/memory");
+
 module.exports = function (
   bot,
   ai,
@@ -19,16 +20,18 @@ module.exports = function (
 
     const intent = router(msg.text);
 
-    switch (intent) {
+    try {
 
-      case "story":
+      switch (intent) {
 
-  await bot.sendMessage(
-    chatId,
-    "📖 Creating Story..."
-  );
+        case "story": {
 
-  const prompt = `
+          await bot.sendMessage(
+            chatId,
+            "📖 Creating Story..."
+          );
+
+          const prompt = `
 Write a professional cinematic story.
 
 Topic:
@@ -49,38 +52,31 @@ Language:
 English.
 `;
 
-  const text = await gemini.generate(prompt);
-        memory.set(chatId, {
-  type: "story",
-  content: text,
-  topic: msg.text
-});
-        memory.set(chatId, {
-  type: "character",
-  content: characterText,
-  topic: msg.text
-});
-        memory.set(chatId, {
-  type: "scene",
-  content: sceneText,
-  topic: msg.text
-});
-  await sendLongMessage(
-    bot,
-    chatId,
-    text
-  );
+          const text = await gemini.generate(prompt);
 
-  break;
+          memory.set(chatId, {
+            type: "story",
+            topic: msg.text,
+            content: text
+          });
 
-      case "character":
+          await sendLongMessage(
+            bot,
+            chatId,
+            text
+          );
 
-  await bot.sendMessage(
-    chatId,
-    "🎭 Creating Character..."
-  );
+          break;
+        }
 
-  const characterPrompt = `
+        case "character": {
+
+          await bot.sendMessage(
+            chatId,
+            "🎭 Creating Character..."
+          );
+
+          const prompt = `
 Create a professional Pixar-style character.
 
 Topic:
@@ -89,42 +85,42 @@ ${msg.text}
 Generate:
 
 Name
-
 Age
-
 Appearance
-
 Costume
-
 Personality
-
 Strength
-
 Weakness
-
 Backstory
 
 Suitable for animated YouTube videos.
 `;
 
-  const characterText = await gemini.generate(characterPrompt);
+          const characterText = await gemini.generate(prompt);
 
-  await sendLongMessage(
-    bot,
-    chatId,
-    characterText
-  );
+          memory.set(chatId, {
+            type: "character",
+            topic: msg.text,
+            content: characterText
+          });
 
-  break;
+          await sendLongMessage(
+            bot,
+            chatId,
+            characterText
+          );
 
-      case "scene":
+          break;
+        }
 
-  await bot.sendMessage(
-    chatId,
-    "🎬 Creating Scene..."
-  );
+        case "scene": {
 
-  const scenePrompt = `
+          await bot.sendMessage(
+            chatId,
+            "🎬 Creating Scene..."
+          );
+
+          const prompt = `
 Create a cinematic Pixar-style storyboard scene.
 
 Topic:
@@ -133,55 +129,68 @@ ${msg.text}
 Generate:
 
 🎬 Scene Title
-
 📖 Scene Description
-
 🎥 Camera Angle
-
 🎭 Character Action
-
 😀 Character Emotion
-
 🌄 Background
-
 💡 Lighting
-
 🖼 Image Prompt
-
 🎞 Video Prompt
 
 Suitable for YouTube animated videos.
 `;
 
-  const sceneText = await gemini.generate(scenePrompt);
+          const sceneText = await gemini.generate(prompt);
 
-  await sendLongMessage(
-    bot,
-    chatId,
-    sceneText
-  );
+          memory.set(chatId, {
+            type: "scene",
+            topic: msg.text,
+            content: sceneText
+          });
 
-  break;
+          await sendLongMessage(
+            bot,
+            chatId,
+            sceneText
+          );
 
-      case "voice":
-        bot.sendMessage(
-          chatId,
-          "🎙 I understood you want a Voice Script.\nPlease use:\n/voice " + msg.text
-        );
-        break;
+          break;
+        }
 
-      case "movieplus":
-        bot.sendMessage(
-          chatId,
-          "🎥 I understood you want a Movie.\nPlease use:\n/movieplus " + msg.text
-        );
-        break;
+        case "voice":
 
-      default:
-        bot.sendMessage(
-          chatId,
-          "🤖 I understood your message, but I'm still learning.\nTry /help to see available commands."
-        );
+          bot.sendMessage(
+            chatId,
+            "🎙 Voice Auto Mode Coming Soon..."
+          );
+          break;
+
+        case "movieplus":
+
+          bot.sendMessage(
+            chatId,
+            "🎥 Movie Auto Mode Coming Soon..."
+          );
+          break;
+
+        default:
+
+          bot.sendMessage(
+            chatId,
+            "🤖 I understood your message.\nTry:\n• Create football story\n• Create Chintu character\n• Create school scene"
+          );
+
+      }
+
+    } catch (err) {
+
+      console.error(err);
+
+      bot.sendMessage(
+        chatId,
+        "❌ AI Generation Failed."
+      );
 
     }
 

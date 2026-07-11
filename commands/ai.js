@@ -24,33 +24,25 @@ module.exports = function (
         topic
       );
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        `📖 STORY\n\n${project.story}`
-      );
+      await bot.sendMessage(chatId, "━━━━━━━━━━━━━━");
+      await bot.sendMessage(chatId, "📖 STORY");
+      await sendLongMessage(bot, chatId, project.story);
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        `🎭 CHARACTER\n\n${project.character}`
-      );
+      await bot.sendMessage(chatId, "━━━━━━━━━━━━━━");
+      await bot.sendMessage(chatId, "🎭 CHARACTER");
+      await sendLongMessage(bot, chatId, project.character);
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        `🎬 SCENES\n\n${project.scene}`
-      );
+      await bot.sendMessage(chatId, "━━━━━━━━━━━━━━");
+      await bot.sendMessage(chatId, "🎬 SCENES");
+      await sendLongMessage(bot, chatId, project.scene);
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        `🎙 VOICE\n\n${project.voice}`
-      );
+      await bot.sendMessage(chatId, "━━━━━━━━━━━━━━");
+      await bot.sendMessage(chatId, "🎙 VOICE SCRIPT");
+      await sendLongMessage(bot, chatId, project.voice);
 
       await bot.sendMessage(
         chatId,
-        "✅ AI Movie Project Completed!"
+        "✅ AI Movie Package Completed!"
       );
 
     } catch (err) {

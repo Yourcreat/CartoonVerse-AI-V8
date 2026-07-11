@@ -1,5 +1,6 @@
 const router = require("../services/router");
 const gemini = require("../services/gemini");
+const memory = require("../utils/memory");
 module.exports = function (
   bot,
   ai,
@@ -49,7 +50,21 @@ English.
 `;
 
   const text = await gemini.generate(prompt);
-
+        memory.set(chatId, {
+  type: "story",
+  content: text,
+  topic: msg.text
+});
+        memory.set(chatId, {
+  type: "character",
+  content: characterText,
+  topic: msg.text
+});
+        memory.set(chatId, {
+  type: "scene",
+  content: sceneText,
+  topic: msg.text
+});
   await sendLongMessage(
     bot,
     chatId,

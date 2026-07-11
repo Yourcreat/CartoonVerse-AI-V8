@@ -4,23 +4,26 @@ const gemini = require("./gemini");
 async function createMovie(chatId, topic) {
 
   const story = await gemini.generate(`
-Write a cinematic story about:
+Write a professional cinematic story about:
 ${topic}
 `);
 
   const character = await gemini.generate(`
-Create Pixar character for:
-${topic}
+Create a Pixar-style character for this story:
+
+${story}
 `);
 
   const scene = await gemini.generate(`
-Create storyboard scenes for:
-${topic}
+Create 10 cinematic storyboard scenes from this story:
+
+${story}
 `);
 
   const voice = await gemini.generate(`
-Create voice script for:
-${topic}
+Create a professional voice-over script from this story:
+
+${story}
 `);
 
   const project = {
@@ -35,7 +38,6 @@ ${topic}
   projectManager.save(chatId, project);
 
   return project;
-
 }
 
 module.exports = {

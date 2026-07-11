@@ -128,6 +128,12 @@ require("./commands/ai")(
   sendLongMessage,
   database
 );
+require("./commands/imageprompts")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/pdf")(bot, database);
 require("./commands/zip")(bot, database);
 // =========================

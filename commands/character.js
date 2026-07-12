@@ -1,4 +1,7 @@
-module.exports = function (bot, ai, sendLongMessage, database) {
+const gemini = require("../services/gemini");
+const memory = require("../services/characterMemory");
+
+module.exports = function (bot) {
 
   bot.onText(/\/character (.+)/, async (msg, match) => {
 
@@ -7,43 +10,63 @@ module.exports = function (bot, ai, sendLongMessage, database) {
 
     try {
 
-      const prompt = `
-Create a detailed cartoon character profile.
+      await bot.sendMessage(
+        chatId,
+        "🎭 Creating Character..."
+      );
 
-Topic: ${topic}
+      const character =
+        await gemini.generate(`
 
-Include:
+You are Pixar Character Designer.
+
+Create ONE unique character.
+
+Topic:
+${topic}
+
+Return:
 
 Name
+
 Age
-Gender
-Appearance
+
+Face Shape
+
 Hair
-Outfit
+
+Eyes
+
+Eyebrows
+
+Skin Tone
+
+Height
+
+Body
+
+Costume
+
+Shoes
+
+Accessories
+
 Personality
-Powers
-Weakness
-Speaking Style
-Art Style
 
-Make it suitable for animated YouTube videos.
-`;
+Voice
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt,
-      });
+Special Features
 
-      const text = response.text;
+Everything must stay EXACTLY SAME forever.
 
-      database.saveProject(chatId, {
-        type: "character",
-        topic,
-        content: text,
-        createdAt: new Date().toISOString(),
-      });
+`);
 
-      await sendLongMessage(bot, chatId, text);
+      memory.setCharacter(chatId, character);
+
+      await bot.sendMessage(
+        chatId,
+        "✅ Character Saved!\n\n" + character
+      );
 
     } catch (err) {
 
@@ -51,7 +74,7 @@ Make it suitable for animated YouTube videos.
 
       await bot.sendMessage(
         chatId,
-        "❌ Character generation failed."
+        "❌ Character Creation Failed."
       );
 
     }

@@ -22,22 +22,29 @@ module.exports = function (
 
       const prompt = await gemini.generate(`
 
-Create one Pixar style image prompt.
+const prompt = `
+You are a professional Pixar concept artist.
+
+Create ONE highly detailed image prompt.
 
 Topic:
 ${topic}
 
-Ultra detailed
+Requirements:
+- Keep the main subject exactly about the topic.
+- No random characters or objects.
+- Pixar 3D animation style.
+- Cinematic composition.
+- Vibrant colors.
+- Highly detailed.
+- Consistent character design.
+- Full body.
+- Clean background.
+- 8K quality.
+- Suitable for YouTube thumbnail.
 
-3D
-
-Pixar
-
-Cinematic Lighting
-
-8K
-
-`);
+Return ONLY the image prompt.
+`;
 
       const imageUrl =
         await imageGenerator.generateImage(prompt);

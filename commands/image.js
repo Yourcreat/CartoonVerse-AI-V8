@@ -45,8 +45,8 @@ Return ONLY the image prompt.
 `);
 
       const imageUrl =
-        await imageGenerator.generate(prompt);
-
+await imageManager.generate(prompt);
+      
       await bot.sendPhoto(
         chatId,
         imageUrl,

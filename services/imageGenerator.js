@@ -1,41 +1,31 @@
-const { fal } = require("@fal-ai/client");
+const Replicate = require("replicate");
 
-// Fal AI Configuration
-fal.config({
-  credentials: process.env.FAL_KEY || process.env.FAL_API_KEY,
+const replicate = new Replicate({
+  auth: process.env.REPLICATE_API_TOKEN,
 });
 
 async function generateImage(prompt) {
 
   try {
 
-    const result = await fal.subscribe(
-      "fal-ai/flux/dev",
+    const output = await replicate.run(
+      "black-forest-labs/flux-schnell",
       {
         input: {
-          prompt: prompt,
-          image_size: "landscape_16_9",
-          num_images: 1
+          prompt: prompt
         }
       }
     );
 
-    if (
-      result &&
-      result.data &&
-      result.data.images &&
-      result.data.images.length > 0
-    ) {
-
-      return result.data.images[0].url;
-
+    if (!output || output.length === 0) {
+      throw new Error("No image returned.");
     }
 
-    throw new Error("No image returned.");
+    return output[0];
 
   } catch (err) {
 
-    console.error("FLUX ERROR:", err);
+    console.error("Replicate Error:", err);
 
     throw err;
 

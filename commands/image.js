@@ -1,5 +1,5 @@
 const gemini = require("../services/gemini");
-const imageGenerator = require("../services/imageGenerator");
+const imageManager = require("../services/imageManager");
 
 module.exports = function (
   bot,

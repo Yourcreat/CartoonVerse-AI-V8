@@ -40,6 +40,7 @@ require("./utils/initFolders")();
 require("./commands/start")(bot);
 require("./commands/help")(bot);
 require("./commands/status")(bot);
+require("./commands/ping")(bot);
 require("./commands/chat")(
   bot,
   ai,

@@ -133,6 +133,12 @@ require("./commands/ai")(
   sendLongMessage,
   database
 );
+require("./commands/studio")(
+  bot,
+  ai,
+  sendLongMessage,
+  database
+);
 require("./commands/imageprompts")(
   bot,
   ai,

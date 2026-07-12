@@ -1,60 +1,71 @@
 const { GoogleGenAI } = require("@google/genai");
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+const keys = [
+  process.env.GEMINI_API_KEY_1,
+  process.env.GEMINI_API_KEY_2,
+  process.env.GEMINI_API_KEY_3
+].filter(Boolean);
+
+let currentKey = 0;
 
 async function generate(prompt) {
 
-  try {
+  for (let i = 0; i < keys.length; i++) {
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-    });
+    const index = (currentKey + i) % keys.length;
 
-    return response.text;
+    try {
 
-  } catch (err) {
+      const ai = new GoogleGenAI({
+        apiKey: keys[index]
+      });
 
-    console.error(err);
+      const response = await ai.models.generateContent({
+        model: "gemini-2.5-flash",
+        contents: prompt
+      });
 
-    // Quota Exceeded
-    if (
-      err.message &&
-      (
-        err.message.includes("429") ||
-        err.message.includes("RESOURCE_EXHAUSTED") ||
-        err.message.includes("Quota")
-      )
-    ) {
+      currentKey = index;
 
-      return `⚠️ Gemini Daily Limit Reached
+      return response.text;
 
-Your free API quota has finished.
+    } catch (err) {
 
-Please:
+      console.log(
+        `❌ API ${index + 1} Failed`
+      );
 
-1️⃣ Wait until tomorrow
+      if (
+        err.message &&
+        (
+          err.message.includes("429") ||
+          err.message.includes("RESOURCE_EXHAUSTED") ||
+          err.message.includes("Quota")
+        )
+      ) {
 
-OR
+        console.log(
+          `⚡ Switching to API ${index + 2}`
+        );
 
-2️⃣ Create a new Gemini API Key
+        continue;
 
-Bot Status:
-✅ Online
-`;
+      }
+
+      console.error(err);
 
     }
 
-    return `❌ Gemini Error
-
-${err.message}`;
-
   }
 
+  return `⚠️ All Gemini API Keys have reached their limits.
+
+Please add a new API Key in Railway.
+
+Bot Status:
+✅ Online`;
 }
 
 module.exports = {
-  generate,
+  generate
 };

@@ -43,6 +43,7 @@ require("./commands/status")(bot);
 require("./commands/ping")(bot);
 require("./commands/stats")(bot, database);
 require("./commands/backup")(bot, database);
+require("./commands/restore")(bot, database);
 require("./commands/chat")(
   bot,
   ai,

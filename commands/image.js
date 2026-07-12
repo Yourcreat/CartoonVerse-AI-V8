@@ -51,7 +51,7 @@ Return ONLY the image prompt.
         chatId,
         imageUrl,
         {
-          caption: "🎨 CartoonVerse AI Image"
+          caption: "🎨 Generated using FLUX AI"
         }
       );
 

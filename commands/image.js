@@ -21,8 +21,6 @@ module.exports = function (
       );
 
       const prompt = await gemini.generate(`
-
-const prompt = `
 You are a professional Pixar concept artist.
 
 Create ONE highly detailed image prompt.
@@ -44,7 +42,7 @@ Requirements:
 - Suitable for YouTube thumbnail.
 
 Return ONLY the image prompt.
-`;
+`);
 
       const imageUrl =
         await imageGenerator.generateImage(prompt);
@@ -53,8 +51,7 @@ Return ONLY the image prompt.
         chatId,
         imageUrl,
         {
-          caption:
-            "🎨 CartoonVerse AI Image"
+          caption: "🎨 CartoonVerse AI Image"
         }
       );
 

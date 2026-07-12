@@ -1,46 +1,54 @@
-module.exports = function (bot, ai, sendLongMessage, database) {
+const gemini = require("../services/gemini");
+const imageGenerator = require("../services/imageGenerator");
+
+module.exports = function (
+  bot,
+  ai,
+  sendLongMessage,
+  database
+) {
 
   bot.onText(/\/image (.+)/, async (msg, match) => {
 
     const chatId = msg.chat.id;
     const topic = match[1];
 
-    await bot.sendMessage(
-      chatId,
-      "🖼️ Creating Image Prompts..."
-    );
-
     try {
 
-      const response = await ai.models.generateContent({
+      await bot.sendMessage(
+        chatId,
+        "🖼 Creating AI Image..."
+      );
 
-        model: "gemini-2.5-flash",
+      const prompt = await gemini.generate(`
 
-        contents: `
-You are a professional Pixar concept artist.
+Create one Pixar style image prompt.
 
 Topic:
 ${topic}
 
-Generate:
+Ultra detailed
 
-• Character Sheet
-• Environment Prompt
-• Scene 1 Prompt
-• Scene 2 Prompt
-• Scene 3 Prompt
-• Lighting Style
-• Camera Style
+3D
 
-All prompts must be cinematic, ultra detailed and English only.
-`
+Pixar
 
-      });
+Cinematic Lighting
 
-      await sendLongMessage(
-        bot,
+8K
+
+`);
+
+      const imageUrl =
+        await imageGenerator.generateImage(prompt);
+
+      await bot.sendPhoto(
         chatId,
-        response.text
+        imageUrl,
+        {
+          caption:
+            "🎨 CartoonVerse AI Image"
+        }
       );
 
     } catch (err) {
@@ -49,7 +57,7 @@ All prompts must be cinematic, ultra detailed and English only.
 
       await bot.sendMessage(
         chatId,
-        "❌ Image Prompt Generation Failed."
+        "❌ Image Generation Failed."
       );
 
     }

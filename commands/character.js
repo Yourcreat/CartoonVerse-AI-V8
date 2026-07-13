@@ -1,4 +1,4 @@
-const gemini = require("../services/gemini");
+const aiRouter = require("../services/aiRouter");
 const memory = require("../services/characterMemory");
 
 module.exports = function (bot) {
@@ -15,52 +15,8 @@ module.exports = function (bot) {
         "🎭 Creating Character..."
       );
 
-      const character =
-        await gemini.generate(`
-
-You are Pixar Character Designer.
-
-Create ONE unique character.
-
-Topic:
-${topic}
-
-Return:
-
-Name
-
-Age
-
-Face Shape
-
-Hair
-
-Eyes
-
-Eyebrows
-
-Skin Tone
-
-Height
-
-Body
-
-Costume
-
-Shoes
-
-Accessories
-
-Personality
-
-Voice
-
-Special Features
-
-Everything must stay EXACTLY SAME forever.
-
-`);
-
+      const character = 
+          await aiRouter.generate(prompt);
       memory.setCharacter(chatId, character);
 
       await bot.sendMessage(

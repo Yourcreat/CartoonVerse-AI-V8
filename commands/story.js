@@ -1,4 +1,4 @@
-const gemini = require("../services/gemini");
+const aiRouter = require("../services/aiRouter");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/story (.+)/, async (msg, match) => {
@@ -30,7 +30,7 @@ Language:
 English.
 `;
 
-const text = await gemini.generate(prompt);
+const text = await aiRouter.generate(prompt);
 
 await sendLongMessage(
   bot,

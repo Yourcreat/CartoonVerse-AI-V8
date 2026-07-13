@@ -1,4 +1,4 @@
-const gemini = require("../services/gemini");
+const aiRouter = require("../services/aiRouter");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/create (.+)/, async (msg, match) => {
@@ -86,7 +86,7 @@ Description
 Return clean markdown.
 `;
 
-      const text = await gemini.generate(prompt);
+      const text = await aiRouter.generate(prompt);
 
       database.saveProject(chatId, {
         type: "create",

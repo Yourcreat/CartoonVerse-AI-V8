@@ -1,54 +1,90 @@
 const aiRouter = require("../services/aiRouter");
-module.exports = function (bot, ai, sendLongMessage, database) {
+
+module.exports = function (
+  bot,
+  ai,
+  sendLongMessage,
+  database
+) {
 
   bot.onText(/\/movie (.+)/, async (msg, match) => {
 
     const chatId = msg.chat.id;
     const topic = match[1];
 
-    await bot.sendMessage(
-      chatId,
-      "🎬 Creating Movie Script..."
-    );
-
     try {
-const prompt = `
-You are a professional Pixar movie writer.
 
-Topic:
+      await bot.sendMessage(
+        chatId,
+        "🎬 Creating Professional Movie..."
+      );
+
+      const prompt = `
+You are an Oscar-winning Pixar movie writer.
+
+TOPIC:
 ${topic}
 
-Create:
+Create a complete movie.
 
-• Movie Title
-• Opening Scene
-• Scene 1–10
-• Dialogues
-• Narration
-• Ending
-• Moral
+Return in this format:
+
+# Movie Title
+
+# Hook
+
+# Main Character
+
+# Scene 1
+
+Narration
+
+Dialogue
+
+Image Prompt
+
+Video Prompt
+
+Repeat until Scene 10.
+
+Then return:
+
+Ending
+
+Moral
+
+YouTube Title
+
+YouTube Description
+
+SEO Keywords
+
+Style:
+Pixar 3D
+Disney Quality
+Family Friendly
+Cinematic
 
 Length:
-1500–2000 words.
-
-Language:
-English.
+2000 words.
 `;
 
-const text = await aiRouter.generate(prompt);
+      const movie =
+        await aiRouter.generate(prompt);
 
-await sendLongMessage(
-  bot,
-  chatId,
-  text
-);
+      await sendLongMessage(
+        bot,
+        chatId,
+        movie
+      );
+
     } catch (err) {
 
       console.error(err);
 
       await bot.sendMessage(
         chatId,
-        "❌ Movie Script Generation Failed."
+        "❌ Movie Generation Failed."
       );
 
     }

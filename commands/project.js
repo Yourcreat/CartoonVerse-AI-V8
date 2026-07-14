@@ -1,60 +1,78 @@
-module.exports = function (bot, ai, sendLongMessage, database) {
+const aiRouter = require("../services/aiRouter");
+
+module.exports = function (
+  bot,
+  ai,
+  sendLongMessage,
+  database
+) {
 
   bot.onText(/\/project (.+)/, async (msg, match) => {
 
     const chatId = msg.chat.id;
     const topic = match[1];
 
-    await bot.sendMessage(
-      chatId,
-      "🚀 Creating Complete Project..."
-    );
-
     try {
 
-      const response = await ai.models.generateContent({
+      await bot.sendMessage(
+        chatId,
+        "🚀 Building Professional Project..."
+      );
 
-        model: "gemini-2.5-flash",
+      const prompt = `
+You are CartoonVerse AI Producer.
 
-        contents: `
-You are a professional YouTube Cartoon Content Creator.
+Create a COMPLETE YouTube Cartoon Project.
 
-Create a complete production-ready project.
-
-Topic:
+TOPIC:
 ${topic}
 
-Return:
+Return in this format:
 
-1. Project Title
-2. Story Summary
-3. Main Character
-4. Character Description
-5. Character Style
-6. Scene List (10 Scenes)
-7. Thumbnail Idea
-8. YouTube Title
-9. YouTube Description
-10. SEO Keywords
+# Project Title
 
-Language:
-English.
-`
+# Story Summary
 
-      });
+# Main Character
 
-      const project = {
+# Character Design
+
+# Character Personality
+
+# Art Style
+
+# Color Palette
+
+# Scene List (10 Scenes)
+
+# Thumbnail Idea
+
+# YouTube Title
+
+# YouTube Description
+
+# SEO Keywords
+
+Style:
+Pixar 3D
+Disney Quality
+Family Friendly
+Professional
+`;
+
+      const project =
+        await aiRouter.generate(prompt);
+
+      database.saveProject(chatId, {
         topic,
         createdAt: new Date().toISOString(),
-        project: response.text
-      };
-
-      database.saveProject(chatId, project);
+        project
+      });
 
       await sendLongMessage(
         bot,
         chatId,
-        response.text
+        project
       );
 
     } catch (err) {

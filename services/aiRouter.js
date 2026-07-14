@@ -2,33 +2,49 @@ const gemini = require("./gemini");
 
 async function generate(prompt) {
 
-  // Gemini
+  // ======================
+  // GEMINI
+  // ======================
+
   try {
 
     const result = await gemini.generate(prompt);
 
-    if (
-      result &&
-      !result.includes("All Gemini API Keys")
-    ) {
+    console.log("✅ Gemini Success");
 
-      console.log("✅ Gemini");
+    return result;
 
-      return result;
-
-    }
-
-  } catch (e) {
+  } catch (err) {
 
     console.log("❌ Gemini Failed");
 
   }
 
-  // Future Providers
+  // ======================
+  // FUTURE AI PROVIDERS
+  // ======================
 
-  console.log("⚠ Switching Provider...");
+  /*
+  try {
 
-  return "⚠ No AI Provider Available.";
+      return await qwen.generate(prompt);
+
+  } catch(e) {}
+
+  try {
+
+      return await together.generate(prompt);
+
+  } catch(e) {}
+
+  try {
+
+      return await openrouter.generate(prompt);
+
+  } catch(e) {}
+  */
+
+  throw new Error("No AI Provider Available.");
 
 }
 

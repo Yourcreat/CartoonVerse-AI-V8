@@ -16,29 +16,91 @@ module.exports = function (
 
       await bot.sendMessage(
         chatId,
-        "🎬 CartoonVerse AI Studio\n\nCreating Production Package..."
+        `🎬 CartoonVerse AI Studio
+
+━━━━━━━━━━━━━━━━━━
+🚀 Starting Production...
+━━━━━━━━━━━━━━━━━━
+
+📝 Story
+🎭 Character
+🎬 Scenes
+🎨 Images
+🎥 Videos
+🎙 Voice
+📦 Project
+
+Please wait...`
       );
 
-      const project = await pipeline.createMovie(
-        chatId,
-        topic
-      );
-
-      await bot.sendMessage(chatId, "📖 STORY");
-      await sendLongMessage(bot, chatId, project.story);
-
-      await bot.sendMessage(chatId, "🎭 CHARACTER");
-      await sendLongMessage(bot, chatId, project.character);
-
-      await bot.sendMessage(chatId, "🎬 SCENES");
-      await sendLongMessage(bot, chatId, project.scene);
-
-      await bot.sendMessage(chatId, "🎙 VOICE");
-      await sendLongMessage(bot, chatId, project.voice);
+      const project =
+        await pipeline.createMovie(
+          chatId,
+          topic
+        );
 
       await bot.sendMessage(
         chatId,
-        "✅ Studio Part 1 Completed!"
+        "📖 STORY"
+      );
+
+      await sendLongMessage(
+        bot,
+        chatId,
+        project.story
+      );
+
+      await bot.sendMessage(
+        chatId,
+        "🎭 CHARACTER"
+      );
+
+      await sendLongMessage(
+        bot,
+        chatId,
+        project.character
+      );
+
+      await bot.sendMessage(
+        chatId,
+        "🎬 SCENES"
+      );
+
+      await sendLongMessage(
+        bot,
+        chatId,
+        project.scene
+      );
+
+      if (project.voice) {
+
+        await bot.sendMessage(
+          chatId,
+          "🎙 VOICE SCRIPT"
+        );
+
+        await sendLongMessage(
+          bot,
+          chatId,
+          project.voice
+        );
+
+      }
+
+      await bot.sendMessage(
+        chatId,
+        `✅ CartoonVerse AI Studio Finished
+
+Project:
+${topic}
+
+Next Commands:
+
+/image ${topic}
+
+/movie ${topic}
+
+/project ${topic}`
       );
 
     } catch (err) {

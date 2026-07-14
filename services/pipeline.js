@@ -1,45 +1,136 @@
-const projectManager = require("./projectManager");
-const gemini = require("./gemini");
+const aiRouter = require("./aiRouter");
+const memory = require("./characterMemory");
 
 async function createMovie(chatId, topic) {
 
-  const story = await gemini.generate(`
-Write a professional cinematic story about:
+  // ==========================
+  // STORY
+  // ==========================
+
+  const story = await aiRouter.generate(`
+You are a Pixar Story Writer.
+
+Create a cinematic story.
+
+Topic:
 ${topic}
+
+Return:
+
+Title
+
+Hook
+
+Story
+
+Ending
+
+Moral
 `);
 
-  const character = await gemini.generate(`
-Create a Pixar-style character for this story:
+  // ==========================
+  // CHARACTER
+  // ==========================
+
+  let character = memory.getCharacter(chatId);
+
+  if (!character) {
+
+    character = await aiRouter.generate(`
+You are Pixar Character Designer.
+
+Create ONE professional character.
+
+Topic:
+${topic}
+
+Return:
+
+Name
+
+Age
+
+Face
+
+Hair
+
+Eyes
+
+Costume
+
+Shoes
+
+Accessories
+
+Personality
+
+Everything must remain identical forever.
+`);
+
+    memory.setCharacter(chatId, character);
+
+  }
+
+  // ==========================
+  // SCENES
+  // ==========================
+
+  const scene = await aiRouter.generate(`
+You are Pixar Storyboard Artist.
+
+Story:
 
 ${story}
+
+Character:
+
+${character}
+
+Create 10 connected scenes.
+
+Each scene must contain:
+
+Scene Number
+
+Narration
+
+Dialogue
+
+Image Prompt
+
+Video Prompt
 `);
 
-  const scene = await gemini.generate(`
-Create 10 cinematic storyboard scenes from this story:
+  // ==========================
+  // VOICE
+  // ==========================
+
+  const voice = await aiRouter.generate(`
+Create professional narration.
+
+Story:
 
 ${story}
+
+Return voice-over only.
 `);
 
-  const voice = await gemini.generate(`
-Create a professional voice-over script from this story:
+  return {
 
-${story}
-`);
-
-  const project = {
-    topic,
     story,
+
     character,
+
     scene,
-    voice,
-    createdAt: new Date().toISOString()
+
+    voice
+
   };
 
-  projectManager.save(chatId, project);
-
-  return project;
 }
 
 module.exports = {
+
   createMovie
+
 };

@@ -1,3 +1,4 @@
+const aiRouter = require("../services/aiRouter");
 module.exports = function (bot, ai, sendLongMessage, database) {
 
   bot.onText(/\/movie (.+)/, async (msg, match) => {
@@ -11,13 +12,8 @@ module.exports = function (bot, ai, sendLongMessage, database) {
     );
 
     try {
-
-      const response = await ai.models.generateContent({
-
-        model: "gemini-2.5-flash",
-
-        contents: `
-You are a professional Pixar movie script writer.
+const prompt = `
+You are a professional Pixar movie writer.
 
 Topic:
 ${topic}
@@ -37,16 +33,15 @@ Length:
 
 Language:
 English.
-`
+`;
 
-      });
+const text = await aiRouter.generate(prompt);
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        response.text
-      );
-
+await sendLongMessage(
+  bot,
+  chatId,
+  text
+);
     } catch (err) {
 
       console.error(err);

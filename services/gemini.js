@@ -3,12 +3,16 @@ const { GoogleGenAI } = require("@google/genai");
 const keys = [
   process.env.GEMINI_API_KEY_1,
   process.env.GEMINI_API_KEY_2,
-  process.env.GEMINI_API_KEY_3
+  process.env.GEMINI_API_KEY_3,
 ].filter(Boolean);
 
 let currentKey = 0;
 
 async function generate(prompt) {
+
+  if (keys.length === 0) {
+    throw new Error("No Gemini API Keys Found.");
+  }
 
   for (let i = 0; i < keys.length; i++) {
 
@@ -20,10 +24,11 @@ async function generate(prompt) {
         apiKey: keys[index]
       });
 
-      const response = await ai.models.generateContent({
-        model: "gemini-2.5-flash",
-        contents: prompt
-      });
+      const response =
+        await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: prompt
+        });
 
       currentKey = index;
 
@@ -31,39 +36,29 @@ async function generate(prompt) {
 
     } catch (err) {
 
-      console.log(
-        `❌ API ${index + 1} Failed`
-      );
+      console.log(`❌ Gemini API ${index + 1} Failed`);
+
+      const message = err?.message || "";
 
       if (
-        err.message &&
-        (
-          err.message.includes("429") ||
-          err.message.includes("RESOURCE_EXHAUSTED") ||
-          err.message.includes("Quota")
-        )
+        message.includes("429") ||
+        message.includes("RESOURCE_EXHAUSTED") ||
+        message.includes("Quota")
       ) {
 
-        console.log(
-          `⚡ Switching to API ${index + 2}`
-        );
-
+        console.log("⚡ Trying Next Gemini API...");
         continue;
 
       }
 
-      console.error(err);
+      throw err;
 
     }
 
   }
 
-  return `⚠️ All Gemini API Keys have reached their limits.
+  throw new Error("All Gemini API Keys reached quota.");
 
-Please add a new API Key in Railway.
-
-Bot Status:
-✅ Online`;
 }
 
 module.exports = {

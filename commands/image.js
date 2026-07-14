@@ -1,4 +1,4 @@
-const gemini = require("../services/gemini");
+const aiRouter = require("../services/aiRouter");
 const imageManager = require("../services/imageManager");
 const characterBuilder =
 require("../services/characterBuilder");
@@ -26,37 +26,7 @@ module.exports = function (
 await characterBuilder.buildCharacter(topic);
 
 const prompt =
-await gemini.generate(`
-
-You are the world's best Pixar concept artist.
-
-${character}
-
-Create ONE cinematic image prompt.
-
-Topic:
-${topic}
-
-Rules:
-
-- Character must stay exactly the same.
-- Never change clothes.
-- Never change face.
-- Never change hairstyle.
-- Keep the same age.
-- Pixar 3D.
-- Cinematic.
-- Ultra detailed.
-- Beautiful lighting.
-- Highly colorful.
-- YouTube thumbnail quality.
-- 8K.
-- Family friendly.
-- Topic must be clearly visible.
-
-Return ONLY the image prompt.
-
-`);
+await aiRouter.generate(prompt);
       const imageUrl =
 await imageManager.generate(prompt);
       

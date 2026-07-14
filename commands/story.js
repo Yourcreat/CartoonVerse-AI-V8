@@ -11,25 +11,45 @@ module.exports = function (bot, ai, sendLongMessage, database) {
     try {
 
       const prompt = `
-Write a professional cinematic story.
+You are an award-winning Pixar and Disney screenwriter.
 
-Topic:
+Create a complete cinematic story.
+
+TOPIC:
 ${topic}
 
 Requirements:
-- Powerful Title
-- Hook
-- Story
-- Ending
-- Moral
 
-Length:
-800-1000 words.
+1. Catchy Title
 
-Language:
-English.
+2. Hook (5-10 seconds)
+
+3. Main Character
+
+4. Beginning
+
+5. Conflict
+
+6. Climax
+
+7. Emotional Ending
+
+8. Moral
+
+Story Length:
+900-1200 words.
+
+Target Audience:
+Kids (5-12)
+
+Style:
+Pixar 3D
+Emotional
+Funny
+Family Friendly
+
+Output in clean markdown.
 `;
-
 const text = await aiRouter.generate(prompt);
 
 await sendLongMessage(

@@ -2,52 +2,54 @@ const gemini = require("./gemini");
 
 async function generate(prompt) {
 
-  // ======================
-  // GEMINI
-  // ======================
+    // ======================
+    // GEMINI
+    // ======================
 
-  try {
+    try {
 
-    const result = await gemini.generate(prompt);
+        console.log("🚀 Sending request to Gemini...");
 
-    console.log("✅ Gemini Success");
+        const result = await gemini.generate(prompt);
 
-    return result;
+        console.log("✅ Gemini Success");
 
-  } catch (err) {
+        return result;
 
-    console.log("❌ Gemini Failed");
+    } catch (err) {
 
-  }
+        console.error("❌ Gemini Failed:", err.message);
 
-  // ======================
-  // FUTURE AI PROVIDERS
-  // ======================
+    }
 
-  /*
-  try {
+    // ======================
+    // FUTURE AI PROVIDERS
+    // ======================
 
-      return await qwen.generate(prompt);
+    /*
+    try {
+        return await qwen.generate(prompt);
+    } catch (err) {
+        console.error("Qwen Failed:", err.message);
+    }
 
-  } catch(e) {}
+    try {
+        return await together.generate(prompt);
+    } catch (err) {
+        console.error("Together Failed:", err.message);
+    }
 
-  try {
+    try {
+        return await openrouter.generate(prompt);
+    } catch (err) {
+        console.error("OpenRouter Failed:", err.message);
+    }
+    */
 
-      return await together.generate(prompt);
-
-  } catch(e) {}
-
-  try {
-
-      return await openrouter.generate(prompt);
-
-  } catch(e) {}
-  */
-
-  throw new Error("No AI Provider Available.");
+    throw new Error("❌ No AI Provider Available.");
 
 }
 
 module.exports = {
-  generate
+    generate
 };

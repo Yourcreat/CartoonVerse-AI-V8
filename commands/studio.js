@@ -16,21 +16,22 @@ module.exports = function (
 
       await bot.sendMessage(
         chatId,
-        `🎬 CartoonVerse AI Studio
+`🎬 CartoonVerse AI Studio V11
 
-━━━━━━━━━━━━━━━━━━
-🚀 Starting Production...
-━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━━━
 
-📝 Story
-🎭 Character
-🎬 Scenes
-🎨 Images
-🎥 Videos
-🎙 Voice
-📦 Project
+🚀 Production Started...
 
-Please wait...`
+✅ Story
+✅ Character
+✅ Scenes
+✅ Voice
+⏳ Image Prompts
+⏳ Video Prompts
+
+Please wait...
+
+━━━━━━━━━━━━━━━━━━━━`
       );
 
       const project =
@@ -39,39 +40,19 @@ Please wait...`
           topic
         );
 
-      await bot.sendMessage(
-        chatId,
-        "📖 STORY"
-      );
+      // STORY
+      await bot.sendMessage(chatId, "📖 STORY");
+      await sendLongMessage(bot, chatId, project.story);
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        project.story
-      );
+      // CHARACTER
+      await bot.sendMessage(chatId, "🎭 CHARACTER");
+      await sendLongMessage(bot, chatId, project.character);
 
-      await bot.sendMessage(
-        chatId,
-        "🎭 CHARACTER"
-      );
+      // SCENES
+      await bot.sendMessage(chatId, "🎬 SCENES");
+      await sendLongMessage(bot, chatId, project.scene);
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        project.character
-      );
-
-      await bot.sendMessage(
-        chatId,
-        "🎬 SCENES"
-      );
-
-      await sendLongMessage(
-        bot,
-        chatId,
-        project.scene
-      );
-
+      // VOICE
       if (project.voice) {
 
         await bot.sendMessage(
@@ -89,18 +70,22 @@ Please wait...`
 
       await bot.sendMessage(
         chatId,
-        `✅ CartoonVerse AI Studio Finished
+`✅ Production Completed
 
-Project:
+📂 Project:
 ${topic}
 
-Next Commands:
+Available Commands
 
 /image ${topic}
 
 /movie ${topic}
 
-/project ${topic}`
+/project ${topic}
+
+/story ${topic}
+
+🎉 More AI features coming soon.`
       );
 
     } catch (err) {
@@ -109,7 +94,7 @@ Next Commands:
 
       await bot.sendMessage(
         chatId,
-        "❌ Studio Failed."
+        "❌ Studio Generation Failed."
       );
 
     }

@@ -22,38 +22,42 @@ module.exports = function (
       const prompt = `
 You are an award-winning Pixar and Disney screenwriter.
 
+Create a complete cinematic story.
+
 TOPIC:
 ${topic}
 
-Create:
+Return in this EXACT format:
 
-# Title
+# 🎬 Title
 
-# Hook
+# 🎯 Hook
 
-# Main Character
+# 👦 Main Character
 
-# Beginning
+# 🌅 Beginning
 
-# Conflict
+# ⚔ Conflict
 
-# Climax
+# 🔥 Climax
 
-# Ending
+# 🎉 Ending
 
-# Moral
+# 💡 Moral
 
-Story Length:
-1000-1500 words.
+Requirements:
 
-Style:
-Pixar
-Disney
-Family Friendly
-Cinematic
+- Pixar Style
+- Disney Style
+- Emotional
+- Family Friendly
+- Cinematic
+- Strong Dialogues
+- Professional Narration
+- 1000-1200 words
+- English only
 
-Language:
-English
+Do NOT add anything outside these sections.
 `;
 
       const story =

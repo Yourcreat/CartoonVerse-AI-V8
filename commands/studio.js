@@ -16,29 +16,26 @@ module.exports = function (
 
       await bot.sendMessage(
         chatId,
-`🎬 CartoonVerse AI Studio V11
+`🎬 CartoonVerse AI Studio V12
 
-━━━━━━━━━━━━━━━━━━━━
+━━━━━━━━━━━━━━━━━━
 
-🚀 Production Started...
+🚀 Creating Full Production Package...
 
-✅ Story
-✅ Character
-✅ Scenes
-✅ Voice
-⏳ Image Prompts
-⏳ Video Prompts
+📝 Story
+🎭 Character
+🎬 Scenes
+🎙 Voice
+🖼 Image Prompts
+🎥 Video Prompts
 
 Please wait...
 
-━━━━━━━━━━━━━━━━━━━━`
+━━━━━━━━━━━━━━━━━━`
       );
 
       const project =
-        await pipeline.createMovie(
-          chatId,
-          topic
-        );
+        await pipeline.createMovie(chatId, topic);
 
       // STORY
       await bot.sendMessage(chatId, "📖 STORY");
@@ -54,38 +51,37 @@ Please wait...
 
       // VOICE
       if (project.voice) {
+        await bot.sendMessage(chatId, "🎙 VOICE SCRIPT");
+        await sendLongMessage(bot, chatId, project.voice);
+      }
 
-        await bot.sendMessage(
-          chatId,
-          "🎙 VOICE SCRIPT"
-        );
+      // IMAGE PROMPTS
+      if (project.imagePrompts) {
+        await bot.sendMessage(chatId, "🖼 IMAGE PROMPTS");
+        await sendLongMessage(bot, chatId, project.imagePrompts);
+      }
 
-        await sendLongMessage(
-          bot,
-          chatId,
-          project.voice
-        );
-
+      // VIDEO PROMPTS
+      if (project.videoPrompts) {
+        await bot.sendMessage(chatId, "🎥 VIDEO PROMPTS");
+        await sendLongMessage(bot, chatId, project.videoPrompts);
       }
 
       await bot.sendMessage(
         chatId,
-`✅ Production Completed
+`✅ CartoonVerse AI Studio Completed
 
 📂 Project:
 ${topic}
 
-Available Commands
-
-/image ${topic}
-
-/movie ${topic}
-
-/project ${topic}
+Available Commands:
 
 /story ${topic}
+/movie ${topic}
+/project ${topic}
+/image ${topic}
 
-🎉 More AI features coming soon.`
+🎉 Production Package Ready!`
       );
 
     } catch (err) {

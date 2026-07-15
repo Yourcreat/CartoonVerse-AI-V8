@@ -1,61 +1,90 @@
-const replicate =
-  require("./imageGenerator");
-
-const together =
-  require("./providers/together");
-
-const pollinations =
-  require("./providers/pollinations");
+const replicate = require("./imageGenerator");
+const together = require("./providers/together");
+const pollinations = require("./providers/pollinations");
 
 async function generate(prompt) {
 
-  // 1 Replicate
+  console.log("🎨 Starting Image Generation...");
+
+  // ==========================
+  // Replicate (Priority 1)
+  // ==========================
 
   try {
 
-    const img =
+    console.log("⚡ Trying Replicate...");
+
+    const image =
       await replicate.generateImage(prompt);
 
-    if (img) {
+    if (image) {
 
-      console.log("Using Replicate");
+      console.log("✅ Replicate Success");
 
-      return img;
+      return image;
 
     }
 
-  } catch (e) {
+  } catch (err) {
 
-    console.log("Replicate Failed");
+    console.log("❌ Replicate Failed");
+    console.log(err.message);
 
   }
 
-  // 2 Together
+  // ==========================
+  // Together AI (Priority 2)
+  // ==========================
 
   try {
 
-    const img =
+    console.log("⚡ Trying Together AI...");
+
+    const image =
       await together.generate(prompt);
 
-    if (img) {
+    if (image) {
 
-      console.log("Using Together");
+      console.log("✅ Together AI Success");
 
-      return img;
+      return image;
 
     }
 
-  } catch (e) {
+  } catch (err) {
 
-    console.log("Together Failed");
+    console.log("❌ Together AI Failed");
+    console.log(err.message);
 
   }
 
-  // 3 Pollinations
+  // ==========================
+  // Pollinations (Priority 3)
+  // ==========================
 
-  console.log("Using Pollinations");
+  try {
 
-  return pollinations.generate(prompt);
+    console.log("⚡ Trying Pollinations...");
+
+    const image =
+      await pollinations.generate(prompt);
+
+    if (image) {
+
+      console.log("✅ Pollinations Success");
+
+      return image;
+
+    }
+
+  } catch (err) {
+
+    console.log("❌ Pollinations Failed");
+    console.log(err.message);
+
+  }
+
+  throw new Error("All Image Providers Failed.");
 
 }
 

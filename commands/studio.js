@@ -1,30 +1,38 @@
 const pipeline = require("../services/pipeline");
 
 module.exports = function (
-  bot,
-  ai,
-  sendLongMessage,
-  database
+    bot,
+    ai,
+    sendLongMessage,
+    database
 ) {
 
-  bot.onText(/\/studio (.+)/, async (msg, match) => {
+    bot.onText(/\/studio(?:\s+(.+))?/, async (msg, match) => {
 
-    const chatId = msg.chat.id;
-    const topic = match[1];
+        const chatId = msg.chat.id;
 
-    try {
+        if (!match[1]) {
+            return bot.sendMessage(
+                chatId,
+                "❌ Usage:\n\n/studio Football Hero"
+            );
+        }
 
-      await bot.sendMessage(
-        chatId,
-`🎬 CartoonVerse AI Studio V12
+        const topic = match[1];
+
+        try {
+
+            await bot.sendMessage(
+                chatId,
+`🎬 CartoonVerse AI Studio V13
 
 ━━━━━━━━━━━━━━━━━━
 
-🚀 Creating Full Production Package...
+🚀 Starting Production...
 
-📝 Story
+📖 Story
 🎭 Character
-🎬 Scenes
+🎬 Storyboard
 🎙 Voice
 🖼 Image Prompts
 🎥 Video Prompts
@@ -32,69 +40,161 @@ module.exports = function (
 Please wait...
 
 ━━━━━━━━━━━━━━━━━━`
-      );
+            );
 
-      const project =
-        await pipeline.createMovie(chatId, topic);
+            const project = await pipeline.createMovie(
+                chatId,
+                topic
+            );
 
-      // STORY
-      await bot.sendMessage(chatId, "📖 STORY");
-      await sendLongMessage(bot, chatId, project.story);
+            // ==========================
+            // STORY
+            // ==========================
 
-      // CHARACTER
-      await bot.sendMessage(chatId, "🎭 CHARACTER");
-      await sendLongMessage(bot, chatId, project.character);
+            await bot.sendMessage(
+                chatId,
+                "📖 STORY ✅"
+            );
 
-      // SCENES
-      await bot.sendMessage(chatId, "🎬 SCENES");
-      await sendLongMessage(bot, chatId, project.scene);
+            await sendLongMessage(
+                bot,
+                chatId,
+                project.story
+            );
 
-      // VOICE
-      if (project.voice) {
-        await bot.sendMessage(chatId, "🎙 VOICE SCRIPT");
-        await sendLongMessage(bot, chatId, project.voice);
-      }
+            // ==========================
+            // CHARACTER
+            // ==========================
 
-      // IMAGE PROMPTS
-      if (project.imagePrompts) {
-        await bot.sendMessage(chatId, "🖼 IMAGE PROMPTS");
-        await sendLongMessage(bot, chatId, project.imagePrompts);
-      }
+            await bot.sendMessage(
+                chatId,
+                "🎭 CHARACTER ✅"
+            );
 
-      // VIDEO PROMPTS
-      if (project.videoPrompts) {
-        await bot.sendMessage(chatId, "🎥 VIDEO PROMPTS");
-        await sendLongMessage(bot, chatId, project.videoPrompts);
-      }
+            await sendLongMessage(
+                bot,
+                chatId,
+                project.character
+            );
 
-      await bot.sendMessage(
-        chatId,
-`✅ CartoonVerse AI Studio Completed
+            // ==========================
+            // SCENES
+            // ==========================
 
-📂 Project:
+            await bot.sendMessage(
+                chatId,
+                "🎬 SCENES ✅"
+            );
+
+            await sendLongMessage(
+                bot,
+                chatId,
+                project.scene
+            );
+
+            // ==========================
+            // VOICE
+            // ==========================
+
+            if (project.voice) {
+
+                await bot.sendMessage(
+                    chatId,
+                    "🎙 VOICE SCRIPT ✅"
+                );
+
+                await sendLongMessage(
+                    bot,
+                    chatId,
+                    project.voice
+                );
+
+            }
+
+            // ==========================
+            // IMAGE PROMPTS
+            // ==========================
+
+            if (project.imagePrompts) {
+
+                await bot.sendMessage(
+                    chatId,
+                    "🖼 IMAGE PROMPTS ✅"
+                );
+
+                await sendLongMessage(
+                    bot,
+                    chatId,
+                    project.imagePrompts
+                );
+
+            }
+
+            // ==========================
+            // VIDEO PROMPTS
+            // ==========================
+
+            if (project.videoPrompts) {
+
+                await bot.sendMessage(
+                    chatId,
+                    "🎥 VIDEO PROMPTS ✅"
+                );
+
+                await sendLongMessage(
+                    bot,
+                    chatId,
+                    project.videoPrompts
+                );
+
+            }
+
+            // ==========================
+            // FINISH
+            // ==========================
+
+            await bot.sendMessage(
+                chatId,
+`🎉 CartoonVerse AI Studio Finished
+
+━━━━━━━━━━━━━━━━━━
+
+📂 Project
 ${topic}
 
-Available Commands:
+Available Commands
+
+/studio ${topic}
 
 /story ${topic}
+
 /movie ${topic}
-/project ${topic}
+
 /image ${topic}
 
-🎉 Production Package Ready!`
-      );
+/project ${topic}
 
-    } catch (err) {
+━━━━━━━━━━━━━━━━━━
 
-      console.error(err);
+✅ Production Package Ready`
+            );
 
-      await bot.sendMessage(
-        chatId,
-        "❌ Studio Generation Failed."
-      );
+        } catch (err) {
 
-    }
+            console.error("Studio Error:", err);
 
-  });
+            await bot.sendMessage(
+                chatId,
+`❌ Studio Generation Failed
+
+Reason:
+${err.message || "Unknown Error"}
+
+Please try again.`
+            );
+
+        }
+
+    });
 
 };

@@ -1,34 +1,45 @@
-async function buildCharacter(topic) {
+const memory = require("./characterMemory");
 
-return `
+function buildPrompt(chatId, scenePrompt) {
+
+  const character =
+    memory.getCharacter(chatId);
+
+  if (!character) {
+    return scenePrompt;
+  }
+
+  return `
 MAIN CHARACTER
 
-Topic:
-${topic}
+${character}
 
-Style:
-Pixar 3D Animation
+=====================
 
-Character Rules:
+SCENE
 
-• Same face in every image
-• Same hairstyle
-• Same clothes
-• Same body
-• Same colors
-• Big expressive eyes
-• Cinematic lighting
-• Ultra detailed
-• Disney Pixar quality
-• Family friendly
-• Consistent proportions
-• 8K
-• No random objects
-• No text
+${scenePrompt}
+
+=====================
+
+IMPORTANT RULES
+
+- Use EXACTLY the same character.
+- Same face.
+- Same hairstyle.
+- Same eyes.
+- Same clothes.
+- Same shoes.
+- Same colors.
+- Same body.
+- Never redesign the character.
+- Pixar 3D.
+- Disney Quality.
+- Cinematic lighting.
+- Ultra detailed.
 `;
-
 }
 
 module.exports = {
-buildCharacter
+  buildPrompt
 };

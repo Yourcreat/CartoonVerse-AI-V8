@@ -10,50 +10,25 @@ async function createMovie(chatId, topic) {
   const story = await aiRouter.generate(`
 You are an award-winning Pixar and Disney screenwriter.
 
-Topic:
+TOPIC:
 ${topic}
 
-Create:
+IMPORTANT RULES:
 
-# Title
+- Create ONLY ONE main character.
+- Never create another hero.
+- The entire movie must revolve around ONE character.
+- Family Friendly.
+- Emotional.
+- Cinematic.
+
+Return:
+
+# Movie Title
 
 # Hook
 
 # Main Character
-
-# Beginning
-
-# Conflict
-
-# Climax
-
-# Ending
-
-# Moral
-
-1000-1200 words.
-
-Language:
-English.
-`);
-
-  // ==========================
-  // CHARACTER
-  // ==========================
-
-  let character = memory.getCharacter(chatId);
-
-  if (!character) {
-
-    character = await aiRouter.generate(`
-You are Pixar Character Designer.
-
-Create ONE permanent character.
-
-Topic:
-${topic}
-
-Return:
 
 Name
 
@@ -85,8 +60,98 @@ Voice
 
 Special Features
 
+# Beginning
+
+# Conflict
+
+# Climax
+
+# Ending
+
+# Moral
+
+Length:
+1000-1200 words.
+
+Language:
+English.
+`);
+
+  // ==========================
+  // CHARACTER
+  // ==========================
+
+  let character = memory.getCharacter(chatId);
+
+  if (!character) {
+
+    character = await aiRouter.generate(`
+You are Pixar Character Designer.
+
+TOPIC:
+${topic}
+
+Create ONE permanent character.
+
+Return:
+
+Name
+
+Age
+
+Face Shape
+
+Hair
+
+Eyes
+
+Eyebrows
+
+Skin Tone
+
+Height
+
+Body Type
+
+Costume
+
+Shoes
+
+Accessories
+
+Personality
+
+Voice
+
+Special Features
+
+Facial Expressions
+
+Walking Style
+
 IMPORTANT:
-This character must remain EXACTLY the same in every future scene and image.
+
+This character is LOCKED.
+
+Never change:
+
+Name
+Face
+Hair
+Eyes
+Eyebrows
+Skin
+Height
+Body
+Costume
+Shoes
+Accessories
+Personality
+Voice
+Special Features
+Expressions
+
+This character must remain identical forever.
 `);
 
     memory.setCharacter(chatId, character);
@@ -100,15 +165,51 @@ This character must remain EXACTLY the same in every future scene and image.
   const scene = await aiRouter.generate(`
 You are Pixar Storyboard Artist.
 
-Story:
+STORY:
 
 ${story}
 
-Character:
+CHARACTER:
 
 ${character}
 
-Create exactly 10 connected scenes.
+IMPORTANT RULES:
+
+Use ONLY this character.
+
+Never redesign.
+
+Never change:
+
+Name
+
+Face
+
+Hair
+
+Eyes
+
+Eyebrows
+
+Skin
+
+Body
+
+Height
+
+Costume
+
+Shoes
+
+Accessories
+
+Personality
+
+Expressions
+
+Never create another hero.
+
+Create EXACTLY 10 connected scenes.
 
 Each scene must contain:
 
@@ -122,7 +223,9 @@ Image Prompt
 
 Video Prompt
 
-Keep the SAME character in every scene.
+Every Image Prompt must describe the SAME character.
+
+Every Video Prompt must describe the SAME character.
 `);
 
   // ==========================
@@ -130,17 +233,21 @@ Keep the SAME character in every scene.
   // ==========================
 
   const voice = await aiRouter.generate(`
-You are a professional voice-over writer.
+You are a Disney Voice Writer.
 
 Story:
 
 ${story}
 
-Create only the narration script.
+Create ONLY narration.
 
 Natural.
+
 Emotional.
-Disney Style.
+
+Professional.
+
+Pixar Style.
 `);
 
   // ==========================
@@ -148,17 +255,53 @@ Disney Style.
   // ==========================
 
   const imagePrompts = await aiRouter.generate(`
-Create 10 professional Pixar image prompts.
+You are Pixar Image Prompt Engineer.
 
-Character:
+CHARACTER:
 
 ${character}
 
-Scenes:
+SCENES:
 
 ${scene}
 
-One image prompt for every scene.
+IMPORTANT:
+
+Use ONLY this character.
+
+Never change:
+
+Face
+
+Hair
+
+Eyes
+
+Body
+
+Costume
+
+Shoes
+
+Accessories
+
+Expressions
+
+Create EXACTLY 10 image prompts.
+
+Each prompt must be highly detailed.
+
+Pixar Quality.
+
+Disney Quality.
+
+3D Animation.
+
+Ultra Detailed.
+
+Cinematic Lighting.
+
+Family Friendly.
 `);
 
   // ==========================
@@ -166,17 +309,43 @@ One image prompt for every scene.
   // ==========================
 
   const videoPrompts = await aiRouter.generate(`
-Create 10 cinematic AI video prompts.
+You are Pixar Video Prompt Engineer.
 
-Character:
+CHARACTER:
 
 ${character}
 
-Scenes:
+SCENES:
 
 ${scene}
 
-One video prompt for every scene.
+IMPORTANT:
+
+Use ONLY this character.
+
+Never redesign the character.
+
+Every scene must contain:
+
+Camera
+
+Lighting
+
+Character Motion
+
+Facial Expression
+
+Environment
+
+Animation
+
+Create EXACTLY 10 cinematic AI video prompts.
+
+Pixar Style.
+
+Disney Style.
+
+Movie Quality.
 `);
 
   return {

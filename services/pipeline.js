@@ -8,24 +8,33 @@ async function createMovie(chatId, topic) {
   // ==========================
 
   const story = await aiRouter.generate(`
-You are a Pixar Story Writer.
-
-Create a cinematic story.
+You are an award-winning Pixar and Disney screenwriter.
 
 Topic:
 ${topic}
 
-Return:
+Create:
 
-Title
+# Title
 
-Hook
+# Hook
 
-Story
+# Main Character
 
-Ending
+# Beginning
 
-Moral
+# Conflict
+
+# Climax
+
+# Ending
+
+# Moral
+
+1000-1200 words.
+
+Language:
+English.
 `);
 
   // ==========================
@@ -39,7 +48,7 @@ Moral
     character = await aiRouter.generate(`
 You are Pixar Character Designer.
 
-Create ONE professional character.
+Create ONE permanent character.
 
 Topic:
 ${topic}
@@ -50,11 +59,19 @@ Name
 
 Age
 
-Face
+Face Shape
 
 Hair
 
 Eyes
+
+Eyebrows
+
+Skin Tone
+
+Height
+
+Body
 
 Costume
 
@@ -64,7 +81,12 @@ Accessories
 
 Personality
 
-Everything must remain identical forever.
+Voice
+
+Special Features
+
+IMPORTANT:
+This character must remain EXACTLY the same in every future scene and image.
 `);
 
     memory.setCharacter(chatId, character);
@@ -86,7 +108,7 @@ Character:
 
 ${character}
 
-Create 10 connected scenes.
+Create exactly 10 connected scenes.
 
 Each scene must contain:
 
@@ -99,6 +121,8 @@ Dialogue
 Image Prompt
 
 Video Prompt
+
+Keep the SAME character in every scene.
 `);
 
   // ==========================
@@ -106,13 +130,53 @@ Video Prompt
   // ==========================
 
   const voice = await aiRouter.generate(`
-Create professional narration.
+You are a professional voice-over writer.
 
 Story:
 
 ${story}
 
-Return voice-over only.
+Create only the narration script.
+
+Natural.
+Emotional.
+Disney Style.
+`);
+
+  // ==========================
+  // IMAGE PROMPTS
+  // ==========================
+
+  const imagePrompts = await aiRouter.generate(`
+Create 10 professional Pixar image prompts.
+
+Character:
+
+${character}
+
+Scenes:
+
+${scene}
+
+One image prompt for every scene.
+`);
+
+  // ==========================
+  // VIDEO PROMPTS
+  // ==========================
+
+  const videoPrompts = await aiRouter.generate(`
+Create 10 cinematic AI video prompts.
+
+Character:
+
+${character}
+
+Scenes:
+
+${scene}
+
+One video prompt for every scene.
 `);
 
   return {
@@ -123,7 +187,11 @@ Return voice-over only.
 
     scene,
 
-    voice
+    voice,
+
+    imagePrompts,
+
+    videoPrompts
 
   };
 

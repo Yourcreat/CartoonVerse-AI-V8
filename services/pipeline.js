@@ -3,24 +3,24 @@ const memory = require("./characterMemory");
 
 async function createMovie(chatId, topic) {
 
-  // ==========================
-  // STORY
-  // ==========================
+    // =========================
+    // STORY
+    // =========================
 
-  const story = await aiRouter.generate(`
-You are an award-winning Pixar and Disney screenwriter.
+    const story = await aiRouter.generate(`
+You are an Oscar-winning Pixar and Disney Screenwriter.
 
 TOPIC:
 ${topic}
 
 IMPORTANT RULES:
 
-- Create ONLY ONE main character.
-- Never create another hero.
-- The entire movie must revolve around ONE character.
-- Family Friendly.
-- Emotional.
-- Cinematic.
+• Create ONLY ONE main character.
+• Never introduce another hero.
+• Family Friendly.
+• Emotional.
+• Funny.
+• Cinematic.
 
 Return:
 
@@ -46,7 +46,7 @@ Skin Tone
 
 Height
 
-Body
+Body Type
 
 Costume
 
@@ -77,15 +77,15 @@ Language:
 English.
 `);
 
-  // ==========================
-  // CHARACTER
-  // ==========================
+    // =========================
+    // CHARACTER MEMORY
+    // =========================
 
-  let character = memory.getCharacter(chatId);
+    let character = memory.getCharacter(chatId);
 
-  if (!character) {
+    if (!character) {
 
-    character = await aiRouter.generate(`
+        character = await aiRouter.generate(`
 You are Pixar Character Designer.
 
 TOPIC:
@@ -93,7 +93,7 @@ ${topic}
 
 Create ONE permanent character.
 
-Return:
+Return ONLY:
 
 Name
 
@@ -133,37 +133,20 @@ IMPORTANT:
 
 This character is LOCKED.
 
-Never change:
+Never change anything.
 
-Name
-Face
-Hair
-Eyes
-Eyebrows
-Skin
-Height
-Body
-Costume
-Shoes
-Accessories
-Personality
-Voice
-Special Features
-Expressions
-
-This character must remain identical forever.
+Every future image must use this exact character.
 `);
 
-    memory.setCharacter(chatId, character);
+        memory.setCharacter(chatId, character);
 
-  }
+    }
+      // =========================
+    // STORYBOARD SCENES
+    // =========================
 
-  // ==========================
-  // SCENES
-  // ==========================
-
-  const scene = await aiRouter.generate(`
-You are Pixar Storyboard Artist.
+    const scenePrompt = `
+You are a Pixar Storyboard Artist.
 
 STORY:
 
@@ -175,45 +158,14 @@ ${character}
 
 IMPORTANT RULES:
 
-Use ONLY this character.
+- Use ONLY this character.
+- Never redesign the character.
+- Keep face, hair, eyes, costume, shoes, accessories and personality identical.
+- Create EXACTLY 10 connected scenes.
 
-Never redesign.
+For EACH scene return:
 
-Never change:
-
-Name
-
-Face
-
-Hair
-
-Eyes
-
-Eyebrows
-
-Skin
-
-Body
-
-Height
-
-Costume
-
-Shoes
-
-Accessories
-
-Personality
-
-Expressions
-
-Never create another hero.
-
-Create EXACTLY 10 connected scenes.
-
-Each scene must contain:
-
-Scene Number
+# Scene Number
 
 Narration
 
@@ -223,17 +175,19 @@ Image Prompt
 
 Video Prompt
 
-Every Image Prompt must describe the SAME character.
+Each Image Prompt must describe the SAME character consistently.
 
-Every Video Prompt must describe the SAME character.
-`);
+Each Video Prompt must describe the SAME character consistently.
+`;
 
-  // ==========================
-  // VOICE
-  // ==========================
+    const scene = await aiRouter.generate(scenePrompt);
 
-  const voice = await aiRouter.generate(`
-You are a Disney Voice Writer.
+    // =========================
+    // VOICE SCRIPT
+    // =========================
+
+    const voicePrompt = `
+You are a professional Disney voice-over writer.
 
 Story:
 
@@ -241,75 +195,22 @@ ${story}
 
 Create ONLY narration.
 
-Natural.
+Requirements:
 
-Emotional.
+- Emotional
+- Natural
+- Family Friendly
+- Pixar Style
+- Ready for AI voice generation
+`;
 
-Professional.
+    const voice = await aiRouter.generate(voicePrompt);
+      // =========================
+    // IMAGE + VIDEO PROMPTS
+    // =========================
 
-Pixar Style.
-`);
-
-  // ==========================
-  // IMAGE PROMPTS
-  // ==========================
-
-  const imagePrompts = await aiRouter.generate(`
-You are Pixar Image Prompt Engineer.
-
-CHARACTER:
-
-${character}
-
-SCENES:
-
-${scene}
-
-IMPORTANT:
-
-Use ONLY this character.
-
-Never change:
-
-Face
-
-Hair
-
-Eyes
-
-Body
-
-Costume
-
-Shoes
-
-Accessories
-
-Expressions
-
-Create EXACTLY 10 image prompts.
-
-Each prompt must be highly detailed.
-
-Pixar Quality.
-
-Disney Quality.
-
-3D Animation.
-
-Ultra Detailed.
-
-Cinematic Lighting.
-
-Family Friendly.
-`);
-
-  // ==========================
-  // VIDEO PROMPTS
-  // ==========================
-
-  const videoPrompts = await aiRouter.generate(`
-You are Pixar Video Prompt Engineer.
+    const imagePrompt = `
+You are a Pixar Image Prompt Engineer.
 
 CHARACTER:
 
@@ -321,53 +222,67 @@ ${scene}
 
 IMPORTANT:
 
-Use ONLY this character.
+- Use ONLY this character.
+- Never change face, hair, eyes, body, costume, shoes or accessories.
+- Create EXACTLY 10 ultra-detailed Pixar 3D image prompts.
+- Cinematic lighting.
+- Disney quality.
+- Family friendly.
+`;
 
-Never redesign the character.
+    const videoPrompt = `
+You are a Pixar Video Prompt Engineer.
 
-Every scene must contain:
+CHARACTER:
 
-Camera
+${character}
 
-Lighting
+SCENES:
 
-Character Motion
+${scene}
 
-Facial Expression
+IMPORTANT:
 
-Environment
-
-Animation
+- Use ONLY this character.
+- Never redesign the character.
+- Every scene must include:
+  - Camera Angle
+  - Camera Movement
+  - Character Motion
+  - Facial Expression
+  - Environment
+  - Lighting
+  - Animation Style
 
 Create EXACTLY 10 cinematic AI video prompts.
 
-Pixar Style.
+Style:
+Pixar
+Disney
+Movie Quality
+`;
 
-Disney Style.
+    // Generate image + video prompts together
+    const [imagePrompts, videoPrompts] = await Promise.all([
+        aiRouter.generate(imagePrompt),
+        aiRouter.generate(videoPrompt)
+    ]);
 
-Movie Quality.
-`);
+    // =========================
+    // RETURN PROJECT
+    // =========================
 
-  return {
-
-    story,
-
-    character,
-
-    scene,
-
-    voice,
-
-    imagePrompts,
-
-    videoPrompts
-
-  };
+    return {
+        story,
+        character,
+        scene,
+        voice,
+        imagePrompts,
+        videoPrompts
+    };
 
 }
 
 module.exports = {
-
-  createMovie
-
+    createMovie
 };

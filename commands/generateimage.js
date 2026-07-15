@@ -1,76 +1,76 @@
-const gemini = require("../services/gemini");
+const aiRouter = require("../services/aiRouter");
 
 module.exports = function (
-  bot,
-  ai,
-  sendLongMessage,
-  database
+    bot,
+    ai,
+    sendLongMessage,
+    database
 ) {
 
-  bot.onText(/\/generateimage (.+)/, async (msg, match) => {
+    bot.onText(/\/generateimage (.+)/, async (msg, match) => {
 
-    const chatId = msg.chat.id;
-    const topic = match[1];
+        const chatId = msg.chat.id;
+        const topic = match[1];
 
-    try {
+        try {
 
-      await bot.sendMessage(
-        chatId,
-        "🖼 Creating Professional Image Prompt..."
-      );
+            await bot.sendMessage(
+                chatId,
+                "🎨 Creating Professional Pixar Image Prompts..."
+            );
 
-      const prompt = `
-Create ONE ultra-detailed AI image prompt.
+            const prompt = `
+You are a Pixar Image Prompt Engineer.
 
 Topic:
 ${topic}
 
-Requirements:
+Create EXACTLY 10 cinematic image prompts.
 
-• Pixar 3D Style
-• Cinematic Composition
-• 8K
-• Ultra Detailed
-• Vibrant Colors
-• Professional Lighting
-• Consistent Character Design
-• High Quality
-• Suitable for Veo, Imagen, Midjourney, Flux and SDXL.
+Rules:
 
-Return ONLY the final image prompt.
+- Pixar Style
+- Disney Style
+- 3D Animation
+- Ultra Detailed
+- Family Friendly
+- Cinematic Lighting
+- Vibrant Colors
+- Same Character in every prompt
+
+Return:
+
+Scene 1
+Image Prompt
+
+Scene 2
+Image Prompt
+
+...
+
+Scene 10
+Image Prompt
 `;
 
-      const imagePrompt = await gemini.generate(prompt);
+            const result = await aiRouter.generate(prompt);
 
-      database.saveProject(chatId, {
-        type: "imageprompt",
-        topic,
-        content: imagePrompt,
-        createdAt: new Date().toISOString(),
-      });
+            await sendLongMessage(
+                bot,
+                chatId,
+                result
+            );
 
-      await sendLongMessage(
-        bot,
-        chatId,
-        imagePrompt
-      );
+        } catch (err) {
 
-      await bot.sendMessage(
-        chatId,
-        "✅ Image Prompt Ready!"
-      );
+            console.error(err);
 
-    } catch (err) {
+            await bot.sendMessage(
+                chatId,
+                "❌ Image Prompt Generation Failed."
+            );
 
-      console.error(err);
+        }
 
-      await bot.sendMessage(
-        chatId,
-        "❌ Image Prompt Generation Failed."
-      );
-
-    }
-
-  });
+    });
 
 };

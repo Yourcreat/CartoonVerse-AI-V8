@@ -1,3 +1,4 @@
+const openAI = require("../services/openGenerativeAI");
 const aiRouter = require("../services/aiRouter");
 
 module.exports = function (

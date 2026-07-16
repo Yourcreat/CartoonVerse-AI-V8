@@ -1,135 +1,79 @@
-const aiRouter = require("../services/aiRouter");
 const openAI = require("../services/openGenerativeAI");
+const aiRouter = require("../services/aiRouter");
 
-module.exports = function (bot) {
+module.exports = function (bot, ai, sendLongMessage, database) {
 
-    bot.onText(/\/generateimage (.+)/, async (msg, match) => {
+  bot.onText(/\/generateimage (.+)/, async (msg, match) => {
 
-        const chatId = msg.chat.id;
-        const input = match[1];
+    const chatId = msg.chat.id;
+    const text = match[1];
 
-        const args = input.split(" ");
+    try {
 
-        const mode = args.shift().toLowerCase();
+      // AI Mode
+      if (text.startsWith("ai ")) {
 
-        const topic = args.join(" ");
+        const prompt = text.replace(/^ai /, "");
 
-        try {
+        await bot.sendMessage(chatId, "🖼 Creating AI Image...");
 
-            // =========================
-            // PROMPT MODE
-            // =========================
+        const result = await openAI.generateImage(prompt);
 
-            if (mode === "prompt") {
+        await bot.sendPhoto(chatId, result.image, {
+          caption:
+`✅ Image Generated
 
-                await bot.sendMessage(
-                    chatId,
-                    "🎨 Creating Professional Image Prompts..."
-                );
+Provider: ${result.provider}
 
-                const prompt = `
-You are Pixar Image Prompt Engineer.
+Model: ${result.model}
+
+Prompt:
+${prompt}`
+        });
+
+        return;
+      }
+
+      // Prompt Mode
+      if (text.startsWith("prompt ")) {
+
+        const topic = text.replace(/^prompt /, "");
+
+        await bot.sendMessage(
+          chatId,
+          "🎨 Creating Professional Pixar Image Prompts..."
+        );
+
+        const prompt = `
+Create EXACTLY 10 Pixar cinematic image prompts.
 
 Topic:
 ${topic}
-
-Create EXACTLY 10 Image Prompts.
-
-Rules:
-
-Pixar Style
-
-Disney Style
-
-Ultra Detailed
-
-3D Animation
-
-Same Character
-
-Cinematic Lighting
-
-Family Friendly
-
-Return:
-
-Scene 1
-
-Prompt
-
-Scene 2
-
-Prompt
-
-...
-
-Scene 10
-
-Prompt
 `;
 
-                const result = await aiRouter.generate(prompt);
+        const result = await aiRouter.generate(prompt);
 
-                return bot.sendMessage(chatId, result);
+        await sendLongMessage(bot, chatId, result);
 
-            }
+        return;
+      }
 
-            // =========================
-            // AI IMAGE MODE
-            // =========================
+      await bot.sendMessage(
+        chatId,
+        "Usage:\n/generateimage prompt cat\n/generateimage ai cat"
+      );
 
-            if (mode === "ai") {
+    } catch (err) {
 
-                await bot.sendMessage(
-                    chatId,
-                    "🖼 Creating AI Image..."
-                );
+      console.error(err);
 
-                const result =
-                    await openAI.generateImage(topic);
+      await bot.sendMessage(
+        chatId,
+        "❌ Image Generation Failed.\n\n" + err.message
+      );
 
-                return bot.sendMessage(
-                    chatId,
-`✅ Image Created
+    }
 
-Provider:
-${result.provider}
-
-Model:
-${result.model}
-
-Prompt:
-${result.prompt}`
-                );
-
-            }
-
-            // =========================
-            // HELP
-            // =========================
-
-            return bot.sendMessage(
-                chatId,
-`Usage:
-
-/generateimage prompt cat hero
-
-OR
-
-/generateimage ai cat hero`
-            );
-
-        } catch (err) {
-
-            console.error(err);
-
-            bot.sendMessage(
-                chatId,
-                "❌ Image Generation Failed."
-            );
-
-        }
-
-    });
+  });
 
 };

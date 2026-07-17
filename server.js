@@ -51,6 +51,7 @@ require("./commands/voice")(bot, ai, sendLongMessage, database);
 
 require("./commands/studio")(bot, ai, sendLongMessage, database);
 require("./commands/generateimage")(bot, ai, sendLongMessage, database);
+require("./commands/generatevideo")(bot,ai,sendLongMessage,database);
 // ==========================
 // Express
 // ==========================

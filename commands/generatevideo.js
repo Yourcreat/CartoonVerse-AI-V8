@@ -1,24 +1,33 @@
-const result = await videoRouter.generateVideo(prompt);
+const videoRouter = require("../services/videoRouter");
 
-if (!result.success) {
+module.exports = {
+  callback: async ({ bot, msg, args }) => {
+    const chatId = msg.chat.id;
+    const prompt = args.join(" ");
 
-    return await bot.sendMessage(
+    if (!prompt) {
+      return bot.sendMessage(
         chatId,
-        `⚠️ ${result.message}
+        "❌ Usage:\n/generatevideo your prompt"
+      );
+    }
 
-Video engine install hone ke baad ye command automatically kaam karegi.`
-    );
+    await bot.sendMessage(chatId, "🎥 Generating AI Video...");
 
-}
+    const result = await videoRouter.generateVideo(prompt);
 
-await bot.sendMessage(
-    chatId,
-`✅ Video Generated
+    if (!result.success) {
+      return bot.sendMessage(chatId, `⚠️ ${result.message}`);
+    }
+
+    return bot.sendMessage(
+      chatId,
+      `✅ Video Generated
 
 Provider: ${result.provider}
-
 Model: ${result.model}
 
-Video:
 ${result.video}`
-);
+    );
+  }
+};

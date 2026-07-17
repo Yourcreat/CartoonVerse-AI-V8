@@ -1,43 +1,74 @@
-const huggingfaceAI = require("./aiProviders/huggingface");
-const pollinationsAI = require("./aiProviders/pollinations");
-const openrouterAI = require("./aiProviders/openrouter");
-const groqAI = require("./aiProviders/groq");
-const deepseekAI = require("./aiProviders/deepseek");
-const qwenAI = require("./aiProviders/qwen");
+const gemini = require("./gemini");
+const huggingface = require("./aiProviders/huggingface");
+const groq = require("./aiProviders/groq");
+const openrouter = require("./aiProviders/openrouter");
+const deepseek = require("./aiProviders/deepseek");
+const qwen = require("./aiProviders/qwen");
 
 async function generate(prompt) {
 
-  const providers = [
-    huggingfaceAI,
-    pollinationsAI,
-    openrouterAI,
-    groqAI,
-    deepseekAI,
-    qwenAI
-  ];
+    const providers = [
 
-  for (const provider of providers) {
+        {
+            name: "Gemini",
+            fn: gemini.generate
+        },
 
-    try {
+        {
+            name: "Groq",
+            fn: groq.generate
+        },
 
-      const result = await provider.generate(prompt);
+        {
+            name: "DeepSeek",
+            fn: deepseek.generate
+        },
 
-      if (result) {
-        return result;
-      }
+        {
+            name: "Qwen",
+            fn: qwen.generate
+        },
 
-    } catch (err) {
+        {
+            name: "OpenRouter",
+            fn: openrouter.generate
+        },
 
-      console.log("Provider Failed:", err.message);
+        {
+            name: "HuggingFace",
+            fn: huggingface.generate
+        }
+
+    ];
+
+    for (const provider of providers) {
+
+        try {
+
+            console.log(`🚀 Trying ${provider.name}`);
+
+            const result = await provider.fn(prompt);
+
+            if (result) {
+
+                console.log(`✅ ${provider.name} Success`);
+
+                return result;
+
+            }
+
+        } catch (err) {
+
+            console.log(`❌ ${provider.name} Failed`);
+
+        }
 
     }
 
-  }
-
-  throw new Error("All Free AI Providers Failed.");
+    throw new Error("No AI Provider Available.");
 
 }
 
 module.exports = {
-  generate
+    generate
 };

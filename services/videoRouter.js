@@ -2,9 +2,15 @@ const huggingface = require("./videoProviders/huggingface");
 
 async function generateVideo(prompt) {
 
-    const providers = [
-        huggingface
-    ];
+    const providers = [];
+
+    // HuggingFace sirf tab use hoga jab API key hogi
+    if (
+        process.env.HUGGINGFACE_API_KEY &&
+        process.env.HUGGINGFACE_API_KEY !== "test"
+    ) {
+        providers.push(huggingface);
+    }
 
     for (const provider of providers) {
 
@@ -24,7 +30,13 @@ async function generateVideo(prompt) {
 
     }
 
-    throw new Error("All Video Providers Failed.");
+    return {
+        success: false,
+        provider: "None",
+        model: "None",
+        message:
+            "No free video provider configured yet."
+    };
 
 }
 

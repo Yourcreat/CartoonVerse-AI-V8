@@ -1,22 +1,19 @@
 const videoRouter = require("../services/videoRouter");
 
-module.exports = {
-  command: "generatevideo",
-  description: "Generate AI Video",
+module.exports = function (
+  bot,
+  ai,
+  sendLongMessage,
+  database
+) {
 
-  callback: async ({ bot, msg, args }) => {
+  bot.onText(/\/generatevideo (.+)/, async (msg, match) => {
+
     const chatId = msg.chat.id;
-
-    const prompt = args.join(" ");
-
-    if (!prompt) {
-      return bot.sendMessage(
-        chatId,
-        "❌ Usage:\n/generatevideo your prompt"
-      );
-    }
+    const prompt = match[1];
 
     try {
+
       await bot.sendMessage(
         chatId,
         "🎥 Generating AI Video..."
@@ -25,19 +22,23 @@ module.exports = {
       const result = await videoRouter.generateVideo(prompt);
 
       if (!result.success) {
-        return bot.sendMessage(
+
+        return await bot.sendMessage(
           chatId,
           `⚠️ ${result.message}`
         );
+
       }
 
-      return bot.sendMessage(
+      await bot.sendMessage(
         chatId,
         `✅ Video Generated
 
 Provider: ${result.provider}
+
 Model: ${result.model}
 
+Video:
 ${result.video}`
       );
 
@@ -45,11 +46,13 @@ ${result.video}`
 
       console.error(err);
 
-      return bot.sendMessage(
+      await bot.sendMessage(
         chatId,
         "❌ Video Generation Failed."
       );
 
     }
-  }
+
+  });
+
 };

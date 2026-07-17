@@ -1,9 +1,5 @@
 const gemini = require("./gemini");
-const huggingface = require("./aiProviders/huggingface");
-const groq = require("./aiProviders/groq");
-const openrouter = require("./aiProviders/openrouter");
-const deepseek = require("./aiProviders/deepseek");
-const qwen = require("./aiProviders/qwen");
+const huggingface = require("./providers/huggingface");
 
 async function generate(prompt) {
 

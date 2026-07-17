@@ -1,79 +1,57 @@
-const openAI = require("../services/openGenerativeAI");
-const aiRouter = require("../services/aiRouter");
+const imageRouter = require("../services/imageRouter");
 
-module.exports = function (bot, ai, sendLongMessage, database) {
+module.exports = function (bot) {
 
-  bot.onText(/\/generateimage (.+)/, async (msg, match) => {
+    bot.onText(/\/generateimage (.+)/, async (msg, match) => {
 
-    const chatId = msg.chat.id;
-    const text = match[1];
+        const chatId = msg.chat.id;
+        const prompt = match[1];
 
-    try {
+        try {
 
-      // AI Mode
-      if (text.startsWith("ai ")) {
+            await bot.sendMessage(
+                chatId,
+                "🎨 Generating Image..."
+            );
 
-        const prompt = text.replace(/^ai /, "");
+            const result =
+                await imageRouter.generateImage(prompt);
 
-        await bot.sendMessage(chatId, "🖼 Creating AI Image...");
+            if (result.image.startsWith("http")) {
 
-        const result = await openAI.generateImage(prompt);
-
-        await bot.sendPhoto(chatId, result.image, {
-          caption:
+                await bot.sendPhoto(
+                    chatId,
+                    result.image,
+                    {
+                        caption:
 `✅ Image Generated
 
 Provider: ${result.provider}
 
-Model: ${result.model}
+Model: ${result.model}`
+                    }
+                );
 
-Prompt:
-${prompt}`
-        });
+            } else {
 
-        return;
-      }
+                await bot.sendMessage(
+                    chatId,
+                    JSON.stringify(result, null, 2)
+                );
 
-      // Prompt Mode
-      if (text.startsWith("prompt ")) {
+            }
 
-        const topic = text.replace(/^prompt /, "");
+        } catch (err) {
 
-        await bot.sendMessage(
-          chatId,
-          "🎨 Creating Professional Pixar Image Prompts..."
-        );
+            console.error(err);
 
-        const prompt = `
-Create EXACTLY 10 Pixar cinematic image prompts.
+            await bot.sendMessage(
+                chatId,
+                "❌ Image Generation Failed."
+            );
 
-Topic:
-${topic}
-`;
+        }
 
-        const result = await aiRouter.generate(prompt);
-
-        await sendLongMessage(bot, chatId, result);
-
-        return;
-      }
-
-      await bot.sendMessage(
-        chatId,
-        "Usage:\n/generateimage prompt cat\n/generateimage ai cat"
-      );
-
-    } catch (err) {
-
-      console.error(err);
-
-      await bot.sendMessage(
-        chatId,
-        "❌ Image Generation Failed.\n\n" + err.message
-      );
-
-    }
-
-  });
+    });
 
 };

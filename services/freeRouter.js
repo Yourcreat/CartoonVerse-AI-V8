@@ -4,37 +4,14 @@ const huggingface = require("./providers/huggingface");
 async function generate(prompt) {
 
     const providers = [
-
         {
             name: "Gemini",
             fn: gemini.generate
         },
-
-        {
-            name: "Groq",
-            fn: groq.generate
-        },
-
-        {
-            name: "DeepSeek",
-            fn: deepseek.generate
-        },
-
-        {
-            name: "Qwen",
-            fn: qwen.generate
-        },
-
-        {
-            name: "OpenRouter",
-            fn: openrouter.generate
-        },
-
         {
             name: "HuggingFace",
             fn: huggingface.generate
         }
-
     ];
 
     for (const provider of providers) {
@@ -55,7 +32,7 @@ async function generate(prompt) {
 
         } catch (err) {
 
-            console.log(`❌ ${provider.name} Failed`);
+            console.log(`❌ ${provider.name} Failed: ${err.message}`);
 
         }
 

@@ -20,7 +20,7 @@ module.exports = function (
       );
 
       const result = await imageRouter.generateImage(prompt);
-
+        console.log(result);
       if (!result.success) {
 
         return await bot.sendMessage(

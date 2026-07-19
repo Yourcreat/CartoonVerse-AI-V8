@@ -1,57 +1,56 @@
 const imageRouter = require("../services/imageRouter");
 
-module.exports = function (bot) {
+module.exports = function (
+  bot,
+  ai,
+  sendLongMessage,
+  database
+) {
 
-    bot.onText(/\/generateimage (.+)/, async (msg, match) => {
+  bot.onText(/\/generateimage (.+)/, async (msg, match) => {
 
-        const chatId = msg.chat.id;
-        const prompt = match[1];
+    const chatId = msg.chat.id;
+    const prompt = match[1];
 
-        try {
+    try {
 
-            await bot.sendMessage(
-                chatId,
-                "🎨 Generating Image..."
-            );
+      await bot.sendMessage(
+        chatId,
+        "🎨 Generating Free AI Image..."
+      );
 
-            const result =
-                await imageRouter.generateImage(prompt);
+      const result = await imageRouter.generateImage(prompt);
 
-            if (result.image.startsWith("http")) {
+      if (!result.success) {
 
-                await bot.sendPhoto(
-                    chatId,
-                    result.image,
-                    {
-                        caption:
-`✅ Image Generated
+        return await bot.sendMessage(
+          chatId,
+          "❌ Image Generation Failed."
+        );
+
+      }
+
+      await bot.sendMessage(
+        chatId,
+        `✅ Image Generated Successfully
 
 Provider: ${result.provider}
 
-Model: ${result.model}`
-                    }
-                );
+🖼️ Image Link:
+${result.image}`
+      );
 
-            } else {
+    } catch (err) {
 
-                await bot.sendMessage(
-                    chatId,
-                    JSON.stringify(result, null, 2)
-                );
+      console.error(err);
 
-            }
+      await bot.sendMessage(
+        chatId,
+        "❌ Image Generation Failed."
+      );
 
-        } catch (err) {
+    }
 
-            console.error(err);
-
-            await bot.sendMessage(
-                chatId,
-                "❌ Image Generation Failed."
-            );
-
-        }
-
-    });
+  });
 
 };

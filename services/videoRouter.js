@@ -1,3 +1,6 @@
+console.log(require("fs").readdirSync(__dirname + "/videoProviders"));
+
+const openmontage = require("./videoProviders/openmontage");
 const huggingface = require("./videoProviders/huggingface");
 
 async function generateVideo(prompt) {

@@ -1,32 +1,28 @@
 const pollinations = require("./imageProviders/pollinations");
-const huggingface = require("./imageProviders/huggingface");
 
 async function generateImage(prompt) {
 
-    const providers = [
-        pollinations,
-        huggingface
-    ];
+    try {
 
-    for (const provider of providers) {
+        const result = pollinations.generateImage(prompt);
 
-        try {
+        return {
+            success: true,
+            provider: result.provider,
+            image: result.image
+        };
 
-            const result = await provider.generateImage(prompt);
+    } catch (err) {
 
-            if (result && result.success) {
-                return result;
-            }
+        console.log(err);
 
-        } catch (err) {
-
-            console.log("Image Provider Failed:", err.message);
-
-        }
+        return {
+            success: false,
+            provider: "None",
+            image: null
+        };
 
     }
-
-    throw new Error("All Image Providers Failed.");
 
 }
 

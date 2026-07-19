@@ -32,15 +32,15 @@ module.exports = function (
 
       }
 
-      await bot.sendMessage(
-        chatId,
-        `✅ Image Generated Successfully
+      await bot.sendPhoto(
+  chatId,
+  result.image,
+  {
+    caption: `✅ Image Generated Successfully
 
-Provider: ${result.provider}
-
-🖼️ Image Link:
-${result.image}`
-      );
+Provider: ${result.provider}`
+  }
+);
 
     } catch (err) {
 

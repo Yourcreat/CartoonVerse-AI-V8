@@ -5,9 +5,10 @@ const huggingface = require("./videoProviders/huggingface");
 
 async function generateVideo(prompt) {
 
-    const providers = [];
+    const providers = [
+        openmontage
+    ];
 
-    // HuggingFace sirf tab use hoga jab API key hogi
     if (
         process.env.HUGGINGFACE_API_KEY &&
         process.env.HUGGINGFACE_API_KEY !== "test"
@@ -37,8 +38,7 @@ async function generateVideo(prompt) {
         success: false,
         provider: "None",
         model: "None",
-        message:
-            "No free video provider configured yet."
+        message: "No free video provider configured yet."
     };
 
 }

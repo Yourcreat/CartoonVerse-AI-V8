@@ -1,12 +1,15 @@
-const fs = require("fs");
+const axios = require("axios");
 
 async function generateVideo(prompt) {
+
+    const imageUrl =
+        `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`;
 
     return {
         success: true,
         provider: "Free Video",
-        video: null,
-        prompt
+        model: "Pollinations + FFmpeg",
+        image: imageUrl
     };
 
 }

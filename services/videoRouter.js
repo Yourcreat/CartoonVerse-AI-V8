@@ -1,5 +1,4 @@
-const openmontage = require("./videoProviders/openmontage");
-const huggingface = require("./videoProviders/huggingface");
+const providers = [];
 
 async function generateVideo(prompt) {
 

@@ -1,5 +1,3 @@
-const axios = require("axios");
-
 async function generateVideo(prompt) {
 
     const imageUrl =
@@ -8,8 +6,8 @@ async function generateVideo(prompt) {
     return {
         success: true,
         provider: "Free Video",
-        model: "Pollinations + FFmpeg",
-        image: imageUrl
+        model: "Pollinations",
+        video: imageUrl
     };
 
 }

@@ -1,42 +1,25 @@
-const providers = [];
+const freevideo = require("./videoProviders/freevideo");
 
 async function generateVideo(prompt) {
 
-    const providers = [
-        openmontage
-    ];
+    try {
 
-    if (
-        process.env.HUGGINGFACE_API_KEY &&
-        process.env.HUGGINGFACE_API_KEY !== "test"
-    ) {
-        providers.push(huggingface);
-    }
+        const result = await freevideo.generateVideo(prompt);
 
-    for (const provider of providers) {
+        return result;
 
-        try {
+    } catch (err) {
 
-            const result = await provider.generateVideo(prompt);
+        console.log(err);
 
-            if (result.success) {
-                return result;
-            }
-
-        } catch (err) {
-
-            console.log(`${provider.provider || "Provider"} Failed`);
-
-        }
+        return {
+            success: false,
+            provider: "None",
+            model: "None",
+            message: "Video Generation Failed."
+        };
 
     }
-
-    return {
-        success: false,
-        provider: "None",
-        model: "None",
-        message: "No video provider available."
-    };
 
 }
 

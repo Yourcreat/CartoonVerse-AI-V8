@@ -39,21 +39,12 @@ Provider: ${result.provider}`
 Provider: ${result.provider}
 
 Model: ${result.model}
+await bot.sendVideo(chatId, result.video, {
+    caption:
+`✅ Video Generated
 
-🎬 ${result.video}`
-            );
+Provider: ${result.provider}
 
-        } catch (err) {
+Model: ${result.model}`
+});
 
-            console.error(err);
-
-            await bot.sendMessage(
-                chatId,
-                "❌ Video Generation Failed."
-            );
-
-        }
-
-    });
-
-};

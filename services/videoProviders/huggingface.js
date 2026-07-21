@@ -2,39 +2,63 @@ const axios = require("axios");
 
 async function generateVideo(prompt) {
 
-    if (
-        !process.env.HUGGINGFACE_API_KEY ||
-        process.env.HUGGINGFACE_API_KEY === "test"
-    ) {
-        throw new Error("HuggingFace API Key Missing");
+    const API_KEY = process.env.HUGGINGFACE_API_KEY;
+
+    if (!API_KEY || API_KEY === "test") {
+        return {
+            success: false,
+            provider: "HuggingFace",
+            model: "LTX-Video",
+            message: "HuggingFace API Key Missing"
+        };
     }
 
-    const response = await axios.post(
+    try {
 
-        "https://router.huggingface.co/v1/video/generations",
+        const response = await axios.post(
 
-        {
-            model: "Lightricks/LTX-Video",
-            prompt: prompt
-        },
+            "https://router.huggingface.co/v1/video/generations",
 
-        {
-            headers: {
-                Authorization: `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
-                "Content-Type": "application/json"
+            {
+                model: "Lightricks/LTX-Video",
+                inputs: prompt
             },
-            timeout: 120000
-        }
 
-    );
+            {
+                headers: {
+                    Authorization: `Bearer ${API_KEY}`,
+                    "Content-Type": "application/json"
+                },
+                timeout: 300000
+            }
 
-    return {
-        success: true,
-        provider: "HuggingFace",
-        model: "LTX-Video",
-        video: response.data.data[0].url,
-        prompt
-    };
+        );
+
+        console.log("HF Response:", response.data);
+
+        return {
+            success: true,
+            provider: "HuggingFace",
+            model: "LTX-Video",
+            video: response.data?.data?.[0]?.url || null,
+            prompt
+        };
+
+    } catch (err) {
+
+        console.log("========== HF ERROR ==========");
+        console.log("Status:", err.response?.status);
+        console.log("Data:", JSON.stringify(err.response?.data, null, 2));
+        console.log("==============================");
+
+        return {
+            success: false,
+            provider: "HuggingFace",
+            model: "LTX-Video",
+            message: err.response?.data?.error || err.message
+        };
+
+    }
 
 }
 

@@ -32,19 +32,43 @@ Provider: ${result.provider}`
 
             }
 
-            await bot.sendMessage(
-                chatId,
-                `✅ Video Generated
+            if (result.video) {
 
-Provider: ${result.provider}
-
-Model: ${result.model}
-await bot.sendVideo(chatId, result.video, {
-    caption:
+                await bot.sendVideo(
+                    chatId,
+                    result.video,
+                    {
+                        caption:
 `✅ Video Generated
 
 Provider: ${result.provider}
 
 Model: ${result.model}`
-});
+                    }
+                );
 
+            } else {
+
+                await bot.sendMessage(
+                    chatId,
+                    `⚠️ Video URL not found.
+
+Provider: ${result.provider}`
+                );
+
+            }
+
+        } catch (err) {
+
+            console.error(err);
+
+            await bot.sendMessage(
+                chatId,
+                "❌ Video Generation Failed."
+            );
+
+        }
+
+    });
+
+};

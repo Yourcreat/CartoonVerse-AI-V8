@@ -1,31 +1,24 @@
-const freevideo = require("./videoProviders/freevideo");
-const huggingface = require("./videoProviders/huggingface");
+const falvideo = require("./videoProviders/falvideo");
 
 async function generateVideo(prompt) {
 
-    // Pehle HuggingFace try karega
-    if (
-        process.env.HUGGINGFACE_API_KEY &&
-        process.env.HUGGINGFACE_API_KEY !== "test"
-    ) {
-        try {
-            return await huggingface.generateVideo(prompt);
-        } catch (err) {
-            console.log("HuggingFace Failed:", err.message);
-        }
-    }
-
-    // Agar HF fail ho jaye to FreeVideo fallback
     try {
-        return await freevideo.generateVideo(prompt);
+
+        return await falvideo.generateVideo(prompt);
+
     } catch (err) {
+
+        console.log(err);
+
         return {
             success: false,
-            provider: "None",
-            model: "None",
-            message: "Video Generation Failed."
+            provider: "Fal AI",
+            model: "LTX-Video",
+            message: err.message
         };
+
     }
+
 }
 
 module.exports = {

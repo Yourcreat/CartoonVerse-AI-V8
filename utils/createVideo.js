@@ -1,34 +1,41 @@
-const axios = require("axios");
-const fs = require("fs");
+const ffmpeg = require("fluent-ffmpeg");
+const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 const path = require("path");
+const fs = require("fs");
 
-async function downloadImage(url, filename = "frame.jpg") {
+ffmpeg.setFfmpegPath(ffmpegPath);
 
-    const dir = path.join(__dirname, "../temp/images");
+async function createVideo(imagePath) {
 
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
+    const outputDir = path.join(__dirname, "../temp/videos");
+
+    if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
     }
 
-    const filePath = path.join(dir, filename);
-
-    const response = await axios({
-        url,
-        method: "GET",
-        responseType: "stream"
-    });
-
-    const writer = fs.createWriteStream(filePath);
-
-    response.data.pipe(writer);
+    const outputVideo = path.join(outputDir, "video.mp4");
 
     return new Promise((resolve, reject) => {
-        writer.on("finish", () => resolve(filePath));
-        writer.on("error", reject);
+
+        ffmpeg(imagePath)
+            .loop(5)
+            .fps(30)
+            .videoCodec("libx264")
+            .outputOptions([
+                "-pix_fmt yuv420p"
+            ])
+            .save(outputVideo)
+            .on("end", () => {
+                resolve(outputVideo);
+            })
+            .on("error", (err) => {
+                reject(err);
+            });
+
     });
 
 }
 
 module.exports = {
-    downloadImage
+    createVideo
 };

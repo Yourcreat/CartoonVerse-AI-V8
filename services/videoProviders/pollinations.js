@@ -1,9 +1,9 @@
-function generateImage(prompt) {
+async function generateImage(prompt) {
 
     return {
         success: true,
-        image:
-            `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
+        provider: "Pollinations",
+        image: `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
     };
 
 }

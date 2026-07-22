@@ -1,10 +1,12 @@
-const falvideo = require("./videoProviders/falvideo");
+const freevideo = require("./videoProviders/freevideo");
 
 async function generateVideo(prompt) {
 
     try {
 
-        return await falvideo.generateVideo(prompt);
+        const result = await freevideo.generateVideo(prompt);
+
+        return result;
 
     } catch (err) {
 
@@ -12,8 +14,8 @@ async function generateVideo(prompt) {
 
         return {
             success: false,
-            provider: "Fal AI",
-            model: "LTX-Video",
+            provider: "Free Video",
+            model: "FFmpeg",
             message: err.message
         };
 

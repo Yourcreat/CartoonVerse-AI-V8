@@ -1,9 +1,5 @@
 const fal = require("@fal-ai/client");
 
-fal.config({
-  credentials: process.env.FAL_KEY
-});
-
 async function generateVideo(prompt) {
   try {
 

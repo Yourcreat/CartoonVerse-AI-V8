@@ -1,19 +1,16 @@
-const fal = require("@fal-ai/client");
+const { fal } = require("@fal-ai/client");
 
 fal.config({
-  credentials: process.env.FAL_KEY
+  credentials: process.env.FAL_KEY,
 });
 
 async function generateVideo(prompt) {
 
-  const result = await fal.subscribe(
-    "fal-ai/ltx-video-v097",
-    {
-      input: {
-        prompt: prompt
-      }
+  const result = await fal.subscribe("fal-ai/ltx-video-v097", {
+    input: {
+      prompt: prompt
     }
-  );
+  });
 
   return {
     success: true,

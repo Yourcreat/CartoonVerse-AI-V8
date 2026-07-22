@@ -1,13 +1,17 @@
 const fal = require("@fal-ai/client");
 
+fal.config({
+  credentials: process.env.FAL_KEY
+});
+
 async function generateVideo(prompt) {
   try {
 
     const result = await fal.subscribe(
-      "fal-ai/ltx-video-v095",
+      "fal-ai/ltx-video-v097",
       {
         input: {
-          prompt: prompt
+          prompt
         }
       }
     );
@@ -15,7 +19,7 @@ async function generateVideo(prompt) {
     return {
       success: true,
       provider: "FAL AI",
-      model: "LTX Video",
+      model: "LTX-Video",
       video: result.data.video.url
     };
 
@@ -24,32 +28,11 @@ async function generateVideo(prompt) {
     return {
       success: false,
       provider: "FAL AI",
-      model: "LTX Video",
+      model: "LTX-Video",
       message: err.message
     };
 
   }
-}
-
-module.exports = {
-  generateVideo
-};
-
-async function generateVideo(prompt) {
-
-  const result = await fal.subscribe("fal-ai/ltx-video-v097", {
-    input: {
-      prompt: prompt
-    }
-  });
-
-  return {
-    success: true,
-    provider: "Fal AI",
-    model: "LTX-Video",
-    video: result.data.video.url
-  };
-
 }
 
 module.exports = {
